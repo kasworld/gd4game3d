@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpm7kd6k102e"]
+
+[ext_resource type="Script" path="res://moving_camera/moving_camera.gd" id="1_xkrfo"]
+
+[node name="MovingCamera" type="Node3D"]
+script = ExtResource("1_xkrfo")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.800731, -0.312989, 0.510752, 0, 0.85264, 0.522499, -0.599024, -0.418381, 0.682736, 20.9117, 18.0937, 18.5827)
