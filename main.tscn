@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://c7o2uicaj4xv7"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_nnvt2"]
+[ext_resource type="PackedScene" uid="uid://cy34xu36jq84y" path="res://ball/ball.tscn" id="2_f5siy"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_nnvt2")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.800731, -0.312989, 0.510752, 0, 0.85264, 0.522499, -0.599024, -0.418381, 0.682736, 20.9117, 18.0937, 18.5827)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.452435, 0.465963, -0.760382, 0, 0.85264, 0.522499, 0.891798, -0.236396, 0.385764, 10, 10, 10)
+
+[node name="BoundBox" type="CSGBox3D" parent="."]
+transparency = 0.5
+flip_faces = true
+size = Vector3(100, 100, 100)
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="."]
+sides = 64
+ring_sides = 64
+
+[node name="Ball" parent="." instance=ExtResource("2_f5siy")]
