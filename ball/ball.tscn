@@ -3,10 +3,9 @@
 [ext_resource type="Script" path="res://ball/ball.gd" id="1_wik6k"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c7uip"]
-albedo_color = Color(0.207843, 0.435294, 1, 1)
+resource_local_to_scene = true
 metallic = 1.0
 clearcoat_enabled = true
-detail_enabled = true
 
 [node name="Ball" type="Node3D"]
 script = ExtResource("1_wik6k")

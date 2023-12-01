@@ -20,3 +20,4 @@ func add_ball()->void:
 func _process(delta: float) -> void:
 	if ball_list.size() < BALL_COUNT:
 		add_ball()
+		$Label3D.text = "Ball %d" % ball_list.size()

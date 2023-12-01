@@ -11,7 +11,7 @@ var radius :float
 func init(ba :AABB, p :Vector3)->void:
 	alive = true
 	life_start = Time.get_unix_time_from_system()
-
+	$Sphere.material.albedo_color = NamedColorList.color_list.pick_random()[0]
 	bounce_area = ba
 	position = p
 	radius = $Sphere.radius
