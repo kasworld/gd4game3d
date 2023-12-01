@@ -3,19 +3,10 @@
 [ext_resource type="Script" path="res://ball/ball.gd" id="1_wik6k"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c7uip"]
-transparency = 1
 albedo_color = Color(0.207843, 0.435294, 1, 1)
 metallic = 1.0
-emission_enabled = true
 clearcoat_enabled = true
-anisotropy_enabled = true
-ao_enabled = true
-subsurf_scatter_enabled = true
-backlight_enabled = true
-refraction_enabled = true
 detail_enabled = true
-grow = true
-proximity_fade_enabled = true
 
 [node name="Ball" type="Node3D"]
 script = ExtResource("1_wik6k")

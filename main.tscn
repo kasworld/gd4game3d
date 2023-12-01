@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c7o2uicaj4xv7"]
+[gd_scene load_steps=5 format=3 uid="uid://c7o2uicaj4xv7"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_nnvt2"]
 [ext_resource type="PackedScene" uid="uid://cy34xu36jq84y" path="res://ball/ball.tscn" id="2_f5siy"]
@@ -7,28 +7,32 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t38wf"]
 transparency = 1
 albedo_color = Color(0, 0.670588, 0.32549, 1)
-emission_enabled = true
+albedo_texture_force_srgb = true
+albedo_texture_msdf = true
 emission = Color(0, 0.45098, 0, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ns1ba"]
-albedo_color = Color(1, 0, 0, 1)
+normal_enabled = true
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_nnvt2")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.452435, 0.465963, -0.760382, 0, 0.85264, 0.522499, 0.891798, -0.236396, 0.385764, 10, 10, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 50, 50)
+light_color = Color(0, 1, 0, 1)
+shadow_enabled = true
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_color = Color(0.0627451, 0.301961, 1, 1)
+light_energy = 100.0
+light_size = 1.0
+shadow_enabled = true
+omni_range = 1000.0
+omni_shadow_mode = 0
 
 [node name="BoundBox" type="CSGBox3D" parent="."]
-transparency = 0.5
+cast_shadow = 2
 flip_faces = true
 size = Vector3(100, 100, 100)
 material = SubResource("StandardMaterial3D_t38wf")
-
-[node name="CSGTorus3D" type="CSGTorus3D" parent="."]
-sides = 64
-ring_sides = 64
-material = SubResource("StandardMaterial3D_ns1ba")
 
 [node name="Ball" parent="." instance=ExtResource("2_f5siy")]
 

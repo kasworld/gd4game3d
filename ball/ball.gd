@@ -8,7 +8,6 @@ var velocity :Vector3
 var bounce_area :AABB
 var radius :float
 
-
 func init(ba :AABB, p :Vector3)->void:
 	alive = true
 	life_start = Time.get_unix_time_from_system()

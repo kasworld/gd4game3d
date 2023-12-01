@@ -1,6 +1,8 @@
 extends Node3D
 
 func _ready() -> void:
-	$Ball.init( AABB( $BoundBox.position -$BoundBox.size/2, $BoundBox.size), Vector3.ZERO )
-	$MovingCamera.init( AABB( $BoundBox.position -$BoundBox.size/2, $BoundBox.size), Vector3.ZERO, $Ball )
+	$DirectionalLight3D.look_at(Vector3.ZERO)
+	var b_box = AABB( $BoundBox.position -$BoundBox.size/2, $BoundBox.size)
+	$Ball.init( b_box, Vector3.ZERO )
+	$MovingCamera.init( b_box, Vector3.ZERO, $Ball )
 
