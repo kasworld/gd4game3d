@@ -14,11 +14,6 @@ normal_enabled = true
 [node name="Main" type="Node3D"]
 script = ExtResource("1_nnvt2")
 
-[node name="Label3D" type="Label3D" parent="."]
-pixel_size = 0.1
-text = "hello	"
-font_size = 128
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 50, 50)
 shadow_enabled = true
@@ -37,3 +32,11 @@ size = Vector3(100, 100, 100)
 material = SubResource("StandardMaterial3D_t38wf")
 
 [node name="MovingCamera" parent="." instance=ExtResource("3_81qi8")]
+
+[node name="LabelInfo" type="Label3D" parent="."]
+sorting_offset = 1.0
+pixel_size = 0.01
+billboard = 1
+double_sided = false
+text = "hello	"
+font_size = 128

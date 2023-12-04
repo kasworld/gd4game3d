@@ -1,7 +1,7 @@
 extends Node
 
 func bounce3d(position :Vector3, velocity :Vector3, area :AABB, radius :float)->Dictionary:
-	var bounced :Vector3i
+	var bounced = Vector3i.ZERO
 	for i in 3:
 		if position[i] < area.position[i] + radius :
 			position[i] = area.position[i] + radius
@@ -18,7 +18,7 @@ func bounce3d(position :Vector3, velocity :Vector3, area :AABB, radius :float)->
 	}
 
 func bounce2d(position :Vector2, velocity :Vector2, area :Rect2, radius :float)->Dictionary:
-	var bounced :Vector2i
+	var bounced = Vector2i.ZERO
 	for i in 2:
 		if position[i] < area.position[i] + radius :
 			position[i] = area.position[i] + radius

@@ -2,7 +2,7 @@ extends Node3D
 
 var ball_scene = preload("res://ball/ball.tscn")
 
-const BALL_COUNT = 1000
+const BALL_COUNT = 10
 var ball_list = []
 var b_box :AABB
 func _ready() -> void:
@@ -20,4 +20,7 @@ func add_ball()->void:
 func _process(delta: float) -> void:
 	if ball_list.size() < BALL_COUNT:
 		add_ball()
-		$Label3D.text = "Ball %d" % ball_list.size()
+
+	$LabelInfo.text = "Ball %d\n(%.1f,%.1f,%.1f)" % [
+		ball_list.size(),
+		$MovingCamera.position.x, $MovingCamera.position.y, $MovingCamera.position.z]

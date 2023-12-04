@@ -14,7 +14,7 @@ func init(ba :AABB, p :Vector3, dst :Node3D)->void:
 
 	bounce_area = ba
 	position = p
-	radius = 1
+	radius = 10
 	velocity = Vector3( (randf()-0.5)*SPEED_LIMIT,(randf()-0.5)*SPEED_LIMIT,(randf()-0.5)*SPEED_LIMIT)
 
 func _process(delta: float) -> void:
