@@ -1,22 +1,27 @@
-[gd_scene load_steps=4 format=3 uid="uid://c7o2uicaj4xv7"]
+[gd_scene load_steps=6 format=3 uid="uid://c7o2uicaj4xv7"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_nnvt2"]
 [ext_resource type="PackedScene" uid="uid://cpm7kd6k102e" path="res://moving_camera/moving_camera.tscn" id="3_81qi8"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t38wf"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_oh2di"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_4uuaj"]
+seamless = true
+noise = SubResource("FastNoiseLite_oh2di")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h4o2a"]
 transparency = 1
-albedo_color = Color(0, 0.670588, 0.32549, 1)
-albedo_texture_force_srgb = true
-albedo_texture_msdf = true
-emission = Color(0, 0.45098, 0, 1)
-normal_enabled = true
+albedo_color = Color(0.501961, 0.501961, 0.501961, 1)
+albedo_texture = SubResource("NoiseTexture2D_4uuaj")
+anisotropy = 1.0
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_nnvt2")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 50, 50)
+light_color = Color(0, 1, 1, 1)
 shadow_enabled = true
+directional_shadow_max_distance = 1000.0
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 light_energy = 100.0
@@ -29,7 +34,7 @@ omni_shadow_mode = 0
 cast_shadow = 2
 flip_faces = true
 size = Vector3(100, 100, 100)
-material = SubResource("StandardMaterial3D_t38wf")
+material = SubResource("StandardMaterial3D_h4o2a")
 
 [node name="MovingCamera" parent="." instance=ExtResource("3_81qi8")]
 

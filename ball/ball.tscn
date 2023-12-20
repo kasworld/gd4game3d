@@ -11,7 +11,8 @@ clearcoat_enabled = true
 script = ExtResource("1_wik6k")
 
 [node name="Sphere" type="CSGSphere3D" parent="."]
-radius = 1.0
+visible = false
+radius = 0.2
 radial_segments = 100
 rings = 100
 material = SubResource("StandardMaterial3D_c7uip")

@@ -6,6 +6,7 @@ const BALL_COUNT = 10
 var ball_list = []
 var b_box :AABB
 func _ready() -> void:
+	$DirectionalLight3D.position = $BoundBox.size *0.45
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 	b_box = AABB( $BoundBox.position -$BoundBox.size/2, $BoundBox.size)
 	add_ball()
