@@ -1,9 +1,10 @@
 class_name Ball extends Node3D
 
-const SPEED_LIMIT :float = 100
 var velocity :Vector3
 var bounce_area :AABB
 var radius :float
+var speed_max :float
+var speed_min :float
 var sphere_count :int
 var sphere_list = []
 var sphere_cursor :int
@@ -12,7 +13,9 @@ func init(ba :AABB, count :int, mesh :Mesh)->void:
 	bounce_area = ba
 	sphere_count = count
 	radius = mesh.radius
-	velocity = Vector3( (randf()-0.5)*SPEED_LIMIT,(randf()-0.5)*SPEED_LIMIT,(randf()-0.5)*SPEED_LIMIT)
+	speed_max = radius * 300
+	speed_min = radius * 120
+	velocity = Vector3( (randf()-0.5)*speed_max,(randf()-0.5)*speed_max,(randf()-0.5)*speed_max)
 	for i in sphere_count:
 		var sp = MeshInstance3D.new()
 		sp.mesh = mesh
@@ -33,7 +36,12 @@ func move_sphere(delta: float, sp :Node3D) -> void:
 	for i in 3:
 		# change vel on bounce
 		if bn.bounced[i] != 0 :
-			velocity[i] = -random_positive(bounce_area.size[i]/2)*bn.bounced[i]
+			velocity[i] = -random_positive(speed_max/2)*bn.bounced[i]
+
+	if velocity.length() > speed_max:
+		velocity = velocity.normalized() * speed_max
+	if velocity.length() < speed_min:
+		velocity = velocity.normalized() * speed_min
 
 func random_positive(w :float)->float:
 	return randf_range(w/10,w)
