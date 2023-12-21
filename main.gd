@@ -14,9 +14,20 @@ func _ready() -> void:
 
 func add_ball()->void:
 	var ball = ball_scene.instantiate()
-	ball.init( b_box, Vector3.ZERO )
+	ball.init( b_box, 100, new_mesh(0.5))
 	ball_list.append(ball)
 	add_child(ball)
+
+func new_mesh(r :float)->Mesh:
+	var mesh = SphereMesh.new()
+	mesh.radius = r
+	mesh.material = new_mat()
+	return mesh
+
+func new_mat()->Material:
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = NamedColorList.color_list.pick_random()[0]
+	return mat
 
 func _process(delta: float) -> void:
 	if ball_list.size() < BALL_COUNT:
