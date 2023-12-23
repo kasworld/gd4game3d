@@ -13,7 +13,7 @@ var current_mat :Material
 var current_rot :Vector3
 var current_rot_accel :Vector3
 
-func init(ba :AABB, count :int, comats :Array)->void:
+func init(ba :AABB, count :int, comats :Array, t:int)->void:
 	color_mat_list = comats
 	bounce_area = ba
 	sphere_count = count
@@ -21,9 +21,18 @@ func init(ba :AABB, count :int, comats :Array)->void:
 	speed_min = radius * 120
 	velocity = Vector3( (randf()-0.5)*speed_max,(randf()-0.5)*speed_max,(randf()-0.5)*speed_max)
 	current_mat = color_mat_list.pick_random()
+	current_rot_accel = Vector3(rand_rad(),rand_rad(),rand_rad())
 	for i in sphere_count:
 		var sp = MeshInstance3D.new()
-		sp.mesh = new_torus(radius,current_mat)
+		match t%4:
+			0:
+				sp.mesh = new_sphere(radius,current_mat)
+			1:
+				sp.mesh = new_text(radius,current_mat)
+			2:
+				sp.mesh = new_box(radius,current_mat)
+			3:
+				sp.mesh = new_torus(radius,current_mat)
 		add_child(sp)
 		sphere_list.append(sp)
 

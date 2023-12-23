@@ -2,7 +2,7 @@ extends Node3D
 
 var ball_scene = preload("res://ball/ball.tscn")
 
-const BALL_COUNT = 10
+const BALL_COUNT = 12
 const TAIL_COUNT = 50
 var ball_list = []
 var b_box :AABB
@@ -21,7 +21,7 @@ func _ready() -> void:
 
 func add_ball(tc :int)->void:
 	var ball = ball_scene.instantiate()
-	ball.init( b_box, tc, color_mat_list)
+	ball.init( b_box, tc, color_mat_list , ball_list.size())
 	ball_list.append(ball)
 	add_child(ball)
 
