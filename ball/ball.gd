@@ -5,36 +5,39 @@ var bounce_area :AABB
 var radius :float = 0.5
 var speed_max :float
 var speed_min :float
-var sphere_count :int
-var sphere_list = []
-var sphere_cursor :int
+var obj_count :int
+var obj_list = []
+var obj_cursor :int
 var color_mat_list = []
 var current_mat :Material
 var current_rot :Vector3
 var current_rot_accel :Vector3
 
+var new_obj_fns = [
+	new_sphere,
+	new_text,
+	new_box,
+	new_prism,
+	new_torus,
+	new_capsule,
+	new_cylinder,
+]
+
 func init(ba :AABB, count :int, comats :Array, t:int)->void:
 	color_mat_list = comats
 	bounce_area = ba
-	sphere_count = count
+	obj_count = count
 	speed_max = radius * 300
 	speed_min = radius * 120
 	velocity = Vector3( (randf()-0.5)*speed_max,(randf()-0.5)*speed_max,(randf()-0.5)*speed_max)
 	current_mat = color_mat_list.pick_random()
 	current_rot_accel = Vector3(rand_rad(),rand_rad(),rand_rad())
-	for i in sphere_count:
+	var new_obj = new_obj_fns[t%new_obj_fns.size()]
+	for i in obj_count:
 		var sp = MeshInstance3D.new()
-		match t%4:
-			0:
-				sp.mesh = new_sphere(radius,current_mat)
-			1:
-				sp.mesh = new_text(radius,current_mat)
-			2:
-				sp.mesh = new_box(radius,current_mat)
-			3:
-				sp.mesh = new_torus(radius,current_mat)
+		sp.mesh = new_obj.call(radius,current_mat)
 		add_child(sp)
-		sphere_list.append(sp)
+		obj_list.append(sp)
 
 func new_sphere(r :float, mat :Material)->Mesh:
 	var mesh = SphereMesh.new()
@@ -46,7 +49,13 @@ func new_sphere(r :float, mat :Material)->Mesh:
 
 func new_box(r :float, mat :Material)->Mesh:
 	var mesh = BoxMesh.new()
-	mesh.size = Vector3(r,r,r)
+	mesh.size = Vector3(r,r,r)*1.5
+	mesh.material = mat
+	return mesh
+
+func new_prism(r :float, mat :Material)->Mesh:
+	var mesh = PrismMesh.new()
+	mesh.size = Vector3(r,r,r)*1.5
 	mesh.material = mat
 	return mesh
 
@@ -64,11 +73,27 @@ func new_torus(r :float, mat :Material)->Mesh:
 	mesh.material = mat
 	return mesh
 
+func new_capsule(r :float, mat :Material)->Mesh:
+	var mesh = CapsuleMesh.new()
+	mesh.height = r*3
+	mesh.radius = r*0.75
+	mesh.material = mat
+	return mesh
+
+func new_cylinder(r :float, mat :Material)->Mesh:
+	var mesh = CylinderMesh.new()
+	mesh.height = r*2
+	mesh.bottom_radius = r
+	mesh.top_radius = 0
+	mesh.material = mat
+	return mesh
+
+
 func move(delta :float)->void:
-	var old_sphere = sphere_list[sphere_cursor%sphere_count]
-	sphere_cursor +=1
-	sphere_list[sphere_cursor%sphere_count].position = old_sphere.position
-	move_sphere(delta, sphere_list[sphere_cursor%sphere_count])
+	var old_obj = obj_list[obj_cursor%obj_count]
+	obj_cursor +=1
+	obj_list[obj_cursor%obj_count].position = old_obj.position
+	move_sphere(delta, obj_list[obj_cursor%obj_count])
 
 func move_sphere(delta: float, sp :Node3D) -> void:
 	sp.position += velocity * delta

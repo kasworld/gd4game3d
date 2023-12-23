@@ -2,7 +2,7 @@ extends Node3D
 
 var ball_scene = preload("res://ball/ball.tscn")
 
-const BALL_COUNT = 12
+const BALL_COUNT = 14
 const TAIL_COUNT = 50
 var ball_list = []
 var b_box :AABB
