@@ -62,7 +62,7 @@ func new_prism(r :float, mat :Material)->Mesh:
 func new_text(r :float, mat :Material)->Mesh:
 	var mesh = TextMesh.new()
 	mesh.font_size = r*500
-	mesh.text = "A"
+	mesh.text = "한"
 	mesh.material = mat
 	return mesh
 

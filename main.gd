@@ -9,9 +9,10 @@ var b_box :AABB
 var color_mat_list = []
 
 func _ready() -> void:
-	$DirectionalLight3D.position = $BoundBox.size *0.45
+	var bound_size = $BoundBox.mesh.size
+	$DirectionalLight3D.position = bound_size *0.45
 	$DirectionalLight3D.look_at(Vector3.ZERO)
-	b_box = AABB( $BoundBox.position -$BoundBox.size/2, $BoundBox.size)
+	b_box = AABB( $BoundBox.position -bound_size/2, bound_size)
 	for i in NamedColorList.color_list:
 		var co = i[0]
 		color_mat_list.append(new_mat(co))
