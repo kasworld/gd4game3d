@@ -8,7 +8,6 @@ var speed_min :float
 var obj_count :int
 var obj_list = []
 var obj_cursor :int
-var color_mat_list = []
 var current_mat :Material
 var current_rot :Vector3
 var current_rot_accel :Vector3
@@ -23,14 +22,13 @@ var new_obj_fns = [
 	new_cylinder,
 ]
 
-func init(ba :AABB, count :int, comats :Array, t:int)->void:
-	color_mat_list = comats
+func init(ba :AABB, count :int, t:int)->void:
 	bounce_area = ba
 	obj_count = count
 	speed_max = radius * 300
 	speed_min = radius * 120
 	velocity = Vector3( (randf()-0.5)*speed_max,(randf()-0.5)*speed_max,(randf()-0.5)*speed_max)
-	current_mat = color_mat_list.pick_random()
+	current_mat = MatCache.get_color_mat(NamedColorList.color_list.pick_random()[0] )
 	current_rot_accel = Vector3(rand_rad(),rand_rad(),rand_rad())
 	var new_obj = new_obj_fns[t%new_obj_fns.size()]
 	for i in obj_count:
@@ -61,8 +59,10 @@ func new_prism(r :float, mat :Material)->Mesh:
 
 func new_text(r :float, mat :Material)->Mesh:
 	var mesh = TextMesh.new()
-	mesh.font_size = r*500
-	mesh.text = "한"
+	mesh.depth = r/4
+	mesh.pixel_size = r / 10
+	mesh.font_size = r*50
+	mesh.text = "A"
 	mesh.material = mat
 	return mesh
 
@@ -88,7 +88,6 @@ func new_cylinder(r :float, mat :Material)->Mesh:
 	mesh.material = mat
 	return mesh
 
-
 func move(delta :float)->void:
 	var old_obj = obj_list[obj_cursor%obj_count]
 	obj_cursor +=1
@@ -108,7 +107,7 @@ func move_sphere(delta: float, sp :Node3D) -> void:
 			bounced = true
 
 	if bounced :
-		current_mat = color_mat_list.pick_random()
+		current_mat = MatCache.get_color_mat(NamedColorList.color_list.pick_random()[0] )
 		current_rot_accel = Vector3(rand_rad(),rand_rad(),rand_rad())
 	sp.mesh.material = current_mat
 	current_rot += current_rot_accel

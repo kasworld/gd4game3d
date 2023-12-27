@@ -6,32 +6,21 @@ const BALL_COUNT = 14
 const TAIL_COUNT = 50
 var ball_list = []
 var b_box :AABB
-var color_mat_list = []
 
 func _ready() -> void:
 	var bound_size = $BoundBox.mesh.size
 	$DirectionalLight3D.position = bound_size *0.45
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 	b_box = AABB( $BoundBox.position -bound_size/2, bound_size)
-	for i in NamedColorList.color_list:
-		var co = i[0]
-		color_mat_list.append(new_mat(co))
 
 	add_ball(TAIL_COUNT)
 	$MovingCamera.init( b_box, Vector3.ZERO, ball_list[0] )
 
 func add_ball(tc :int)->void:
 	var ball = ball_scene.instantiate()
-	ball.init( b_box, tc, color_mat_list , ball_list.size())
+	ball.init( b_box, tc, ball_list.size())
 	ball_list.append(ball)
 	add_child(ball)
-
-func new_mat(co: Color)->Material:
-	var mat = StandardMaterial3D.new()
-	mat.albedo_color = co
-	mat.metallic = 1
-	mat.clearcoat = true
-	return mat
 
 func _process(delta: float) -> void:
 	if ball_list.size() < BALL_COUNT:
