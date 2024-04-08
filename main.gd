@@ -16,6 +16,12 @@ func _ready() -> void:
 	add_ball(TAIL_COUNT)
 	$MovingCamera.init( b_box, Vector3.ZERO, ball_list[0] )
 
+	$SubViewport/MoveLine2D.init(600,2,Vector2($SubViewport.size.x,$SubViewport.size.y))
+	#$SubViewport.set_clear_mode(SubViewport.CLEAR_MODE_ONCE)
+	# Retrieve the texture and set it to the viewport quad.
+	$BoundBox.material_override.albedo_texture = $SubViewport.get_texture()
+
+
 func add_ball(tc :int)->void:
 	var ball = ball_scene.instantiate()
 	ball.init( b_box, tc, ball_list.size())
@@ -23,6 +29,8 @@ func add_ball(tc :int)->void:
 	add_child(ball)
 
 func _process(delta: float) -> void:
+	$SubViewport/MoveLine2D.move(1.0/60.0)
+
 	if ball_list.size() < BALL_COUNT:
 		add_ball(TAIL_COUNT)
 
