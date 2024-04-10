@@ -38,7 +38,7 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 	mesh.size = sz
 	mesh.orientation = face #PlaneMesh.FACE_X
 	mesh.flip_faces = flip
-	var size_pixel = Vector2i(2000,1500)
+	var size_pixel = Vector2i(2048,2048)
 	var l2d = line2d_scene.instantiate()
 	l2d.init(300,4,size_pixel)
 	var sv = SubViewport.new()
