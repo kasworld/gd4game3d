@@ -1,15 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://c7o2uicaj4xv7"]
+[gd_scene load_steps=3 format=3 uid="uid://c7o2uicaj4xv7"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_nnvt2"]
 [ext_resource type="PackedScene" uid="uid://cpm7kd6k102e" path="res://moving_camera/moving_camera.tscn" id="3_81qi8"]
-[ext_resource type="PackedScene" uid="uid://da370dapcfjwm" path="res://move_line2d/move_line_2d.tscn" id="3_s6dci"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jncdw"]
-metallic_specular = 0.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_02iee"]
-flip_faces = true
-size = Vector3(100, 100, 100)
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_nnvt2")
@@ -35,13 +27,3 @@ billboard = 1
 double_sided = false
 text = "hello	"
 font_size = 128
-
-[node name="BoundBox" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_jncdw")
-mesh = SubResource("BoxMesh_02iee")
-
-[node name="SubViewport" type="SubViewport" parent="."]
-size = Vector2i(2048, 2048)
-render_target_update_mode = 4
-
-[node name="MoveLine2D" parent="SubViewport" instance=ExtResource("3_s6dci")]
