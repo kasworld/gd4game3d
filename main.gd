@@ -36,7 +36,7 @@ var line2d_list :Array
 func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :bool)->MeshInstance3D:
 	var mesh = PlaneMesh.new()
 	mesh.size = sz
-	mesh.orientation = face #PlaneMesh.FACE_X
+	mesh.orientation = face
 	mesh.flip_faces = flip
 	var size_pixel = Vector2i(2048,2048)
 	var l2d = line2d_scene.instantiate()
