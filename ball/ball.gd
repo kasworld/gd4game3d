@@ -37,6 +37,39 @@ func init(ba :AABB, count :int, t:int)->void:
 		add_child(sp)
 		obj_list.append(sp)
 
+func _physics_process(delta: float) -> void:
+	move(delta)
+
+func move(delta :float)->void:
+	var old_obj = obj_list[obj_cursor%obj_count]
+	obj_cursor +=1
+	obj_list[obj_cursor%obj_count].position = old_obj.position
+	move_sphere(delta, obj_list[obj_cursor%obj_count])
+
+func move_sphere(delta: float, sp :Node3D) -> void:
+	sp.position += velocity * delta
+	var bn = Bounce.bounce3d(sp.position,velocity,bounce_area,radius)
+	sp.position = bn.position
+	velocity = bn.velocity
+	var bounced = false
+	for i in 3:
+		# change vel on bounce
+		if bn.bounced[i] != 0 :
+			velocity[i] = -random_positive(speed_max/2)*bn.bounced[i]
+			bounced = true
+
+	if bounced :
+		current_mat = MatCache.get_color_mat(NamedColorList.color_list.pick_random()[0] )
+		current_rot_accel = Vector3(rand_rad(),rand_rad(),rand_rad())
+	sp.mesh.material = current_mat
+	current_rot += current_rot_accel
+	sp.rotation = current_rot
+
+	if velocity.length() > speed_max:
+		velocity = velocity.normalized() * speed_max
+	if velocity.length() < speed_min:
+		velocity = velocity.normalized() * speed_min
+
 func new_sphere(r :float, mat :Material)->Mesh:
 	var mesh = SphereMesh.new()
 	mesh.radius = r
@@ -88,41 +121,9 @@ func new_cylinder(r :float, mat :Material)->Mesh:
 	mesh.material = mat
 	return mesh
 
-func move(delta :float)->void:
-	var old_obj = obj_list[obj_cursor%obj_count]
-	obj_cursor +=1
-	obj_list[obj_cursor%obj_count].position = old_obj.position
-	move_sphere(delta, obj_list[obj_cursor%obj_count])
-
-func move_sphere(delta: float, sp :Node3D) -> void:
-	sp.position += velocity * delta
-	var bn = Bounce.bounce3d(sp.position,velocity,bounce_area,radius)
-	sp.position = bn.position
-	velocity = bn.velocity
-	var bounced = false
-	for i in 3:
-		# change vel on bounce
-		if bn.bounced[i] != 0 :
-			velocity[i] = -random_positive(speed_max/2)*bn.bounced[i]
-			bounced = true
-
-	if bounced :
-		current_mat = MatCache.get_color_mat(NamedColorList.color_list.pick_random()[0] )
-		current_rot_accel = Vector3(rand_rad(),rand_rad(),rand_rad())
-	sp.mesh.material = current_mat
-	current_rot += current_rot_accel
-	sp.rotation = current_rot
-
-	if velocity.length() > speed_max:
-		velocity = velocity.normalized() * speed_max
-	if velocity.length() < speed_min:
-		velocity = velocity.normalized() * speed_min
-
 func rand_rad()->float:
 	return randf_range(-PI,PI)/10
 
 func random_positive(w :float)->float:
 	return randf_range(w/10,w)
 
-func _physics_process(delta: float) -> void:
-	move(delta)
