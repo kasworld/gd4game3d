@@ -1,6 +1,6 @@
 extends Node3D
 
-class_name BallTrail
+class_name BallTrail2
 
 var velocity :Vector3
 var bounce_area :AABB
