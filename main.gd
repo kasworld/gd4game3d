@@ -1,6 +1,6 @@
 extends Node3D
 
-var ball_scene = preload("res://ball/ball.tscn")
+var balltrail_scene = preload("res://ball_trail/ball_trail.tscn")
 var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
 const BALL_COUNT = 14
@@ -27,8 +27,8 @@ func _ready() -> void:
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(bound_size.z/2,0,0), PlaneMesh.FACE_X, true)
 
 func add_ball(tc :int)->void:
-	var ball = ball_scene.instantiate()
-	ball.init( b_box, tc, ball_list.size())
+	var ball = balltrail_scene.instantiate()
+	ball.init( b_box,0.5, tc, ball_list.size())
 	ball_list.append(ball)
 	add_child(ball)
 
