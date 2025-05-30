@@ -1,6 +1,5 @@
 extends Node3D
 
-var balltrail_scene = preload("res://ball_trail/ball_trail.tscn")
 var balltrail2_scene = preload("res://ball_trail_2/ball_trail_2.tscn")
 var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
@@ -33,12 +32,11 @@ func add_ball(tc :int)->void:
 		randf_range(b_box.position.y, b_box.end.y),
 		randf_range(b_box.position.z, b_box.end.z),
 	)
-	var ball = balltrail2_scene.instantiate().init( bounce_cell, 0.5, tc, ball_list.size(), pos)
+	var ball = balltrail2_scene.instantiate().init( bounce, 0.5, tc, ball_list.size(), pos)
 	ball_list.append(ball)
 	add_child(ball)
 
-# wallinfo [aabb , axis_wall [3][2]bool ]
-func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
+func bounce(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce2.v3f(pos, b_box, radius)
 
 var line2d_list :Array

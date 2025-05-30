@@ -20,8 +20,10 @@ func init(ba :AABB, p :Vector3, dst :Node3D)->void:
 func _process(delta: float) -> void:
 	$Camera3D.look_at(dest_node3d.position)
 
-func _physics_process(delta: float) -> void:
 	position += velocity * delta
-	var bn = Bounce.bounce3d(position,velocity,bounce_area,radius)
-	position = bn.position
-	velocity = bn.velocity
+	var bn = Bounce2.v3f(position, bounce_area, radius)
+	for i in 3:
+		# change vel on bounce
+		if bn.bounced[i] != 0 :
+			velocity[i] = -bn.bounced[i] * abs(velocity[i])
+	position = bn.pos
