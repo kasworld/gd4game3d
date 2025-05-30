@@ -40,8 +40,8 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 	mesh.orientation = face
 	mesh.flip_faces = flip
 	var size_pixel = Vector2i(2048,2048)
-	var l2d = line2d_scene.instantiate()
-	l2d.init(300,4,size_pixel)
+	var l2d = line2d_scene.instantiate().init_with_random(300, 4, 1, size_pixel)
+	l2d.start()
 	var sv = SubViewport.new()
 	sv.size = size_pixel
 	sv.render_target_update_mode = SubViewport.UPDATE_ALWAYS
