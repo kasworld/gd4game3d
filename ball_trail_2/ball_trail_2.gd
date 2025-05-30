@@ -133,4 +133,3 @@ func rand_rad()->float:
 
 func random_positive(w :float)->float:
 	return randf_range(w/10,w)
-
