@@ -4,7 +4,7 @@ var balltrail_scene = preload("res://ball_trail/ball_trail.tscn")
 var balltrail2_scene = preload("res://ball_trail_2/ball_trail_2.tscn")
 var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
-const BALL_COUNT = 14
+const BALL_COUNT = 10
 const TAIL_COUNT = 50
 var ball_list = []
 var b_box :AABB
@@ -28,10 +28,18 @@ func _ready() -> void:
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(bound_size.z/2,0,0), PlaneMesh.FACE_X, true)
 
 func add_ball(tc :int)->void:
-	var ball = balltrail2_scene.instantiate()
-	ball.init( b_box,0.5, tc, ball_list.size())
+	var pos = Vector3(
+		randf_range(b_box.position.x, b_box.end.x),
+		randf_range(b_box.position.y, b_box.end.y),
+		randf_range(b_box.position.z, b_box.end.z),
+	)
+	var ball = balltrail2_scene.instantiate().init( bounce_cell, 0.5, tc, ball_list.size(), pos)
 	ball_list.append(ball)
 	add_child(ball)
+
+# wallinfo [aabb , axis_wall [3][2]bool ]
+func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
+	return Bounce2.v3f(pos, b_box, radius)
 
 var line2d_list :Array
 func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :bool)->MeshInstance3D:
