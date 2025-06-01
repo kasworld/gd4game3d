@@ -1,21 +1,21 @@
 extends Node3D
 
-var balltrail2_scene = preload("res://ball_trail_2/ball_trail_2.tscn")
+var meshtrail_scene = preload("res://mesh_trail/mesh_trail.tscn")
 var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
-var ball_list = []
+var meshtrail_list = []
 var b_box :AABB
-var BallTrailMeshTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
+var MeshTrailTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
 
 func _ready() -> void:
-	BallTrailMeshTypeList.append_array(BallTrailMeshTypeList.duplicate())
+	MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
 	var bound_size = Vector3(100,100,100)
 	$DirectionalLight3D.position = bound_size *0.45
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 	b_box = AABB( -bound_size/2, bound_size)
 
-	add_ball()
-	$MovingCamera.init( b_box, Vector3.ZERO, ball_list[0] )
+	add_meshtrail()
+	$MovingCamera.init( b_box, Vector3.ZERO, meshtrail_list[0] )
 
 	make_line2d(Vector2(bound_size.x,bound_size.y),Vector3(0,0,-bound_size.z/2), PlaneMesh.FACE_Z, false)
 	make_line2d(Vector2(bound_size.x,bound_size.y),Vector3(0,0,bound_size.z/2), PlaneMesh.FACE_Z, true)
@@ -26,16 +26,16 @@ func _ready() -> void:
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(-bound_size.z/2,0,0), PlaneMesh.FACE_X, false)
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(bound_size.z/2,0,0), PlaneMesh.FACE_X, true)
 
-func add_ball()->void:
+func add_meshtrail()->void:
 	var pos = Vector3(
 		randf_range(b_box.position.x, b_box.end.x),
 		randf_range(b_box.position.y, b_box.end.y),
 		randf_range(b_box.position.z, b_box.end.z),
 	)
-	var mesh_type = BallTrailMeshTypeList.pop_front()
+	var mesh_type = MeshTrailTypeList.pop_front()
 	var tc := randi_range(10,100)
-	var ball = balltrail2_scene.instantiate().init( bounce, 0.5, tc, mesh_type, pos)
-	ball_list.append(ball)
+	var ball = meshtrail_scene.instantiate().init( bounce, 0.5, tc, mesh_type, pos)
+	meshtrail_list.append(ball)
 	add_child(ball)
 
 func bounce(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
@@ -68,11 +68,11 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 	return sp
 
 func _process(delta: float) -> void:
-	if BallTrailMeshTypeList.size() > 0:
-		add_ball()
+	if MeshTrailTypeList.size() > 0:
+		add_meshtrail()
 
-	$LabelInfo.text = "BallTrail %d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [
-		ball_list.size(),
+	$LabelInfo.text = "MeshTrail %d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [
+		meshtrail_list.size(),
 		$MovingCamera.position.x, $MovingCamera.position.y, $MovingCamera.position.z,
 		1.0/delta]
 
