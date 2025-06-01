@@ -3,10 +3,10 @@ extends Node3D
 var balltrail2_scene = preload("res://ball_trail_2/ball_trail_2.tscn")
 var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
-const BALL_COUNT = 10
 const TAIL_COUNT = 50
 var ball_list = []
 var b_box :AABB
+var BallTrailMeshTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
 
 func _ready() -> void:
 	var bound_size = Vector3(100,100,100)
@@ -32,7 +32,8 @@ func add_ball(tc :int)->void:
 		randf_range(b_box.position.y, b_box.end.y),
 		randf_range(b_box.position.z, b_box.end.z),
 	)
-	var ball = balltrail2_scene.instantiate().init( bounce, 0.5, tc, ball_list.size(), pos)
+	var mesh_type = BallTrailMeshTypeList.pop_front()
+	var ball = balltrail2_scene.instantiate().init( bounce, 0.5, tc, mesh_type, pos)
 	ball_list.append(ball)
 	add_child(ball)
 
@@ -66,7 +67,7 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 	return sp
 
 func _process(delta: float) -> void:
-	if ball_list.size() < BALL_COUNT:
+	if BallTrailMeshTypeList.size() > 0:
 		add_ball(TAIL_COUNT)
 
 	$LabelInfo.text = "Ball %dx%d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [

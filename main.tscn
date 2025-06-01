@@ -7,7 +7,6 @@
 script = ExtResource("1_nnvt2")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-light_color = Color(0, 1, 1, 1)
 shadow_enabled = true
 directional_shadow_max_distance = 1000.0
 
