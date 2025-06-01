@@ -3,18 +3,18 @@ extends Node3D
 var balltrail2_scene = preload("res://ball_trail_2/ball_trail_2.tscn")
 var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
-const TAIL_COUNT = 50
 var ball_list = []
 var b_box :AABB
 var BallTrailMeshTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
 
 func _ready() -> void:
+	BallTrailMeshTypeList.append_array(BallTrailMeshTypeList.duplicate())
 	var bound_size = Vector3(100,100,100)
 	$DirectionalLight3D.position = bound_size *0.45
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 	b_box = AABB( -bound_size/2, bound_size)
 
-	add_ball(TAIL_COUNT)
+	add_ball()
 	$MovingCamera.init( b_box, Vector3.ZERO, ball_list[0] )
 
 	make_line2d(Vector2(bound_size.x,bound_size.y),Vector3(0,0,-bound_size.z/2), PlaneMesh.FACE_Z, false)
@@ -26,13 +26,14 @@ func _ready() -> void:
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(-bound_size.z/2,0,0), PlaneMesh.FACE_X, false)
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(bound_size.z/2,0,0), PlaneMesh.FACE_X, true)
 
-func add_ball(tc :int)->void:
+func add_ball()->void:
 	var pos = Vector3(
 		randf_range(b_box.position.x, b_box.end.x),
 		randf_range(b_box.position.y, b_box.end.y),
 		randf_range(b_box.position.z, b_box.end.z),
 	)
 	var mesh_type = BallTrailMeshTypeList.pop_front()
+	var tc := randi_range(10,100)
 	var ball = balltrail2_scene.instantiate().init( bounce, 0.5, tc, mesh_type, pos)
 	ball_list.append(ball)
 	add_child(ball)
@@ -68,9 +69,24 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 
 func _process(delta: float) -> void:
 	if BallTrailMeshTypeList.size() > 0:
-		add_ball(TAIL_COUNT)
+		add_ball()
 
-	$LabelInfo.text = "Ball %dx%d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [
-		ball_list.size(),TAIL_COUNT,
+	$LabelInfo.text = "BallTrail %d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [
+		ball_list.size(),
 		$MovingCamera.position.x, $MovingCamera.position.y, $MovingCamera.position.z,
 		1.0/delta]
+
+var key2fn = {
+	KEY_ESCAPE:_on_button_esc_pressed,
+}
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed:
+		var fn = key2fn.get(event.keycode)
+		if fn != null:
+			fn.call()
+	elif event is InputEventMouseButton and event.is_pressed():
+		pass
+
+func _on_button_esc_pressed() -> void:
+	get_tree().quit()

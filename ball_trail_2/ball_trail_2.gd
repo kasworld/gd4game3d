@@ -21,6 +21,7 @@ func init(bnfn :Callable, r :float, count :int, mesh_type, pos :Vector3) -> Ball
 	speed_min = radius * 80
 	velocity = Vector3( (randf()-0.5)*speed_max,(randf()-0.5)*speed_max,(randf()-0.5)*speed_max)
 	current_color = NamedColorList.color_list.pick_random()[0]
+	current_rot = randf_range(-PI/4,PI/4)
 	current_rot_accel = rand_rad()
 	make_mat_multi(new_mesh_by_type(mesh_type,radius), count, pos)
 	return self
@@ -83,6 +84,7 @@ func move_ball(delta: float, oldi :int, newi:int) -> void:
 		current_rot_accel = rand_rad()
 	set_multi_color(newi, current_color)
 	current_rot += current_rot_accel
+	current_rot = clampf(current_rot, -PI/4, PI/4)
 	set_multi_rotation(newi, velocity.normalized(), current_rot)
 
 	if velocity.length() > speed_max:
