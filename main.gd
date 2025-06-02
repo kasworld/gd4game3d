@@ -5,10 +5,15 @@ var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
 var meshtrail_list = []
 var b_box :AABB
-var MeshTrailTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
+#var MeshTrailTypeList = PlayingCard.make_deck_with_joker()
+var MeshTrailTypeList = ["♠","♣","♥","♦" ] #,"★","☆","♩","♪","♬"]
+#var MeshTrailTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
 
 func _ready() -> void:
-	MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
+	#MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
+	#MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
+	#MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
+	#MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
 	var bound_size = Vector3(100,100,100)
 	$DirectionalLight3D.position = bound_size *0.45
 	$DirectionalLight3D.look_at(Vector3.ZERO)
@@ -33,6 +38,7 @@ func add_meshtrail()->void:
 		randf_range(b_box.position.z, b_box.end.z),
 	)
 	var mesh_type = MeshTrailTypeList.pop_front()
+	#var tc := 1
 	var tc := randi_range(10,100)
 	var ball = meshtrail_scene.instantiate().init( bounce, 0.5, tc, mesh_type, pos)
 	meshtrail_list.append(ball)
