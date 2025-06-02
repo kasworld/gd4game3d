@@ -5,7 +5,7 @@ var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
 var meshtrail_list = []
 var b_box :AABB
-#var MeshTrailTypeList = PlayingCard.make_deck_with_joker()
+#var MeshTrailTypeList = PlayingCard.make_deck()
 var MeshTrailTypeList = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
 #var MeshTrailTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
 

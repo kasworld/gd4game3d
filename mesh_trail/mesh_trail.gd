@@ -9,22 +9,24 @@ var speed_max :float
 var speed_min :float
 var obj_cursor :int
 var current_color :Color
-var current_rot :float
-var current_rot_accel :float
+var current_rotation :float
+var current_rotation_velocity :float
+var rotation_velocity_deviation :float
 var mesh_trail :MultiMeshInstance3D
 var multimesh :MultiMesh
 
-func init(bnfn :Callable, r :float, count :int, mesh_type, pos :Vector3) -> MeshTrail:
-	radius = r
-	bounce_fn = bnfn
+func init(bounce_fn_a :Callable, radius_a :float, mesh_count :int, mesh_type, initial_pos :Vector3, rotation_velocity_deviation_a :float = 4*PI) -> MeshTrail:
+	radius = radius_a
+	bounce_fn = bounce_fn_a
+	rotation_velocity_deviation = rotation_velocity_deviation_a
 	speed_max = radius * 120
 	speed_min = radius * 80
 	velocity = Vector3( (randf()-0.5)*speed_max,(randf()-0.5)*speed_max,(randf()-0.5)*speed_max)
 	current_color = NamedColorList.color_list.pick_random()[0]
-	make_mat_multi(new_mesh_by_type(mesh_type,radius), count, pos)
+	make_mat_multi(new_mesh_by_type(mesh_type,radius), mesh_count, initial_pos)
 	return self
 
-func make_mat_multi(mesh :Mesh,count :int, pos:Vector3):
+func make_mat_multi(mesh :Mesh,count :int, initial_pos:Vector3):
 	var mat = Global3d.get_color_mat(Color.WHITE)
 	mat.vertex_color_use_as_albedo = true
 	mesh.material = mat
@@ -41,8 +43,7 @@ func make_mat_multi(mesh :Mesh,count :int, pos:Vector3):
 
 	for i in multimesh.visible_instance_count:
 		multimesh.set_instance_color(i,current_color)
-		var ball_position = pos
-		var t = Transform3D(Basis(), ball_position)
+		var t = Transform3D(Basis(), initial_pos)
 		multimesh.set_instance_transform(i,t)
 
 func set_multi_pos_rot(i :int, pos :Vector3, axis :Vector3, rot :float) -> void:
@@ -73,9 +74,9 @@ func move_trail(delta: float, oldi :int, newi:int) -> void:
 
 	if bn.bounced != Vector3i.ZERO:
 		current_color = NamedColorList.color_list.pick_random()[0]
-		current_rot_accel =  randfn(0, PI/4)
-	current_rot += current_rot_accel
-	set_multi_pos_rot(newi, bn.pos, velocity.normalized(), current_rot)
+		current_rotation_velocity =  randfn(0, rotation_velocity_deviation)
+	current_rotation += current_rotation_velocity * delta
+	set_multi_pos_rot(newi, bn.pos, velocity.normalized(), current_rotation)
 	set_multi_color(newi, current_color)
 
 	if velocity.length() > speed_max:
