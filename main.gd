@@ -19,24 +19,29 @@ func _ready() -> void:
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 	b_box = AABB( -bound_size/2, bound_size)
 
-	add_meshtrail()
-	$MovingCamera.init( b_box, Vector3.ZERO, meshtrail_list[0] )
+	for mt in MeshTrailTypeList:
+		var ball = meshtrail_scene.instantiate().set_ColorMode_OnBounce().init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		meshtrail_list.append(ball)
+		add_child(ball)
+	for mt in MeshTrailTypeList:
+		var ball = meshtrail_scene.instantiate().set_ColorMode_MeshGradient().init( bounce, 0.5, randi_range(10,100), mt, Vector3.ZERO)
+		meshtrail_list.append(ball)
+		add_child(ball)
+	for mt in MeshTrailTypeList:
+		var ball = meshtrail_scene.instantiate().set_ColorMode_ByPosition(b_box).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		meshtrail_list.append(ball)
+		add_child(ball)
 
+	$MovingCamera.init( b_box, Vector3.ZERO, meshtrail_list[0] )
 	make_line2d(Vector2(bound_size.x,bound_size.y),Vector3(0,0,-bound_size.z/2), PlaneMesh.FACE_Z, false)
 	make_line2d(Vector2(bound_size.x,bound_size.y),Vector3(0,0,bound_size.z/2), PlaneMesh.FACE_Z, true)
-
 	make_line2d(Vector2(bound_size.x,bound_size.z),Vector3(0,-bound_size.z/2,0), PlaneMesh.FACE_Y, false)
 	make_line2d(Vector2(bound_size.x,bound_size.z),Vector3(0,bound_size.z/2,0), PlaneMesh.FACE_Y, true)
-
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(-bound_size.z/2,0,0), PlaneMesh.FACE_X, false)
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(bound_size.z/2,0,0), PlaneMesh.FACE_X, true)
 
 func add_meshtrail()->void:
-	var pos = Vector3(
-		randf_range(b_box.position.x, b_box.end.x),
-		randf_range(b_box.position.y, b_box.end.y),
-		randf_range(b_box.position.z, b_box.end.z),
-	)
+	var pos := Vector3.ZERO
 	var mesh_type = MeshTrailTypeList.pop_front()
 	#var tc := 1
 	var tc := randi_range(10,100)
@@ -74,8 +79,8 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 	return sp
 
 func _process(delta: float) -> void:
-	if MeshTrailTypeList.size() > 0:
-		add_meshtrail()
+	#if MeshTrailTypeList.size() > 0:
+		#add_meshtrail()
 
 	$LabelInfo.text = "MeshTrail %d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [
 		meshtrail_list.size(),
