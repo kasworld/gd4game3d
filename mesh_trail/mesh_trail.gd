@@ -81,7 +81,6 @@ func make_mat_multi(mesh :Mesh,count :int, initial_pos:Vector3):
 		var t = Transform3D(Basis(), initial_pos)
 		multimesh.set_instance_transform(i,t)
 
-
 func set_color_by_mode(mesh_index :int, pos :Vector3) -> void:
 	var co :Color
 	match color_mode:

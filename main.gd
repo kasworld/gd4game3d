@@ -15,14 +15,14 @@ func _ready() -> void:
 	b_box = AABB( -bound_size/2, bound_size)
 
 	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().with_color_OnBounce().init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		var ball = meshtrail_scene.instantiate().with_color_OnBounce().set_random_color_fn(random_color3).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().with_color_MeshGradient().init( bounce, 0.5, randi_range(10,100), mt, Vector3.ZERO)
+		var ball = meshtrail_scene.instantiate().with_color_MeshGradient().set_random_color_fn(random_color3).init( bounce, 0.5, randi_range(10,100), mt, Vector3.ZERO)
 		$MeshTrailContainer.add_child(ball)
-	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().with_color_ByPosition(b_box).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
-		$MeshTrailContainer.add_child(ball)
+	#for mt in MeshTrailTypeList:
+		#var ball = meshtrail_scene.instantiate().with_color_ByPosition(b_box).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		#$MeshTrailContainer.add_child(ball)
 
 	$MovingCamera.init( b_box, Vector3.ZERO, $MeshTrailContainer.get_child(0) )
 	make_line2d(Vector2(b_box.size.x,b_box.size.y), Vector3(b_box.get_center().x, b_box.get_center().y, b_box.position.z),     PlaneMesh.FACE_Z, false)
@@ -34,6 +34,15 @@ func _ready() -> void:
 
 func bounce(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce2.v3f(pos, b_box, radius)
+
+var color_list_light = NamedColorList.make_light_color_list()
+var color_list_dark = NamedColorList.make_dark_color_list()
+func random_color1() -> Color:
+	return NamedColorList.color_list.pick_random()[0]
+func random_color2() -> Color:
+	return color_list_light.pick_random()[0]
+func random_color3() -> Color:
+	return color_list_dark.pick_random()[0]
 
 var line2d_list :Array
 func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :bool)->MeshInstance3D:
