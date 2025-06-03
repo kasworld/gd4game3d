@@ -32,7 +32,7 @@ func _ready() -> void:
 	make_line2d(Vector2(b_box.size.y,b_box.size.z), Vector3(b_box.position.x,     b_box.get_center().y, b_box.get_center().z), PlaneMesh.FACE_X, false)
 	make_line2d(Vector2(b_box.size.y,b_box.size.z), Vector3(b_box.end.x,          b_box.get_center().y, b_box.get_center().z), PlaneMesh.FACE_X, true)
 
-func bounce(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
+func bounce(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce2.v3f(pos, b_box, radius)
 
 var line2d_list :Array
