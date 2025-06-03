@@ -8,6 +8,13 @@ var b_box :AABB
 var MeshTrailTypeList = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
 #var MeshTrailTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
 
+func get_color_ByPosition(pos :Vector3) -> Color:
+	var co :Color
+	for i in 3:
+		co[i] = (pos[i] - b_box.position[i]) / b_box.size[i]
+	co = co.inverted()
+	return co
+
 func _ready() -> void:
 	var bound_size = Vector3(100,100,100)
 	$DirectionalLight3D.position = bound_size *0.45
@@ -22,6 +29,9 @@ func _ready() -> void:
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate().init_ByPosition(b_box).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		$MeshTrailContainer.add_child(ball)
+	for mt in MeshTrailTypeList:
+		var ball = meshtrail_scene.instantiate().init_ByPositionFn(get_color_ByPosition).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
 		$MeshTrailContainer.add_child(ball)
 
 	$MovingCamera.init( b_box, Vector3.ZERO, $MeshTrailContainer.get_child(0) )
