@@ -3,6 +3,22 @@ class_name MeshTrail
 
 enum ColorMode {OnBounce, MeshGradient, ByPosition }
 var color_mode :ColorMode = ColorMode.OnBounce
+# for ColorMode.MeshGradient 
+var color_from :Color # or current color
+var color_to :Color
+var color_progress :int # 0 to mesh_count-1
+# for ColorMode.ByPosition
+var color_aabb :AABB
+func set_ColorMode_OnBounce() -> MeshTrail:
+	color_mode = ColorMode.OnBounce
+	return self
+func set_ColorMode_MeshGradient() -> MeshTrail:
+	color_mode = ColorMode.MeshGradient
+	return self
+func set_ColorMode_ByPosition(c_aabb :AABB) -> MeshTrail:
+	color_mode = ColorMode.ByPosition
+	color_aabb = c_aabb
+	return self
 
 var velocity :Vector3
 var bounce_fn :Callable
@@ -15,14 +31,6 @@ var current_rotation_velocity :float
 var rotation_velocity_deviation :float
 var mesh_trail :MultiMeshInstance3D
 var multimesh :MultiMesh
-
-# for ColorMode.MeshGradient 
-var color_from :Color # or current color
-var color_to :Color
-var color_progress :int # 0 to mesh_count-1
-# for ColorMode.ByPosition
-var bound_size = Vector3(100,100,100)
-var b_box = AABB( -bound_size/2, bound_size)
 
 func init(bounce_fn_a :Callable, radius_a :float, mesh_count :int, mesh_type, initial_pos :Vector3, rotation_velocity_deviation_a :float = 4*PI) -> MeshTrail:
 	radius = radius_a
@@ -60,28 +68,22 @@ func get_next_color() -> Color:
 	color_progress += 1
 	if color_progress >= multimesh.instance_count:
 		color_from = color_to
-		color_to = NamedColorList.color_list.pick_random()[0]
+		color_to = random_color()
 		color_progress = 0
 	return lerp(color_from, color_to, float(color_progress)/float(multimesh.instance_count))
 
-func pos_to_color(bbox :AABB, pos :Vector3) -> Color:
-	var rtn :Color
-	for i in 3:
-		rtn[i] = (pos[i] - bbox.position[i]) / bbox.size[i]
-	return rtn
-
-func set_multi_color(i, co :Color) -> void:
-	multimesh.set_instance_color(i,co)
-
 func set_color_by_mode(mesh_index :int, pos :Vector3) -> void:
+	var co :Color
 	match color_mode:
 		ColorMode.ByPosition:
-			set_multi_color(mesh_index, pos_to_color(b_box, pos))
+			for i in 3:
+				co[i] = (pos[i] - color_aabb.position[i]) / color_aabb.size[i]
 		ColorMode.OnBounce:
-			set_multi_color(mesh_index, color_from)
+			co = color_from
 		ColorMode.MeshGradient:
-			set_multi_color(mesh_index, get_next_color())
-
+			co = get_next_color()
+	multimesh.set_instance_color(mesh_index, co)
+	
 func set_multi_pos_rot(i :int, pos :Vector3, axis :Vector3, rot :float) -> void:
 	var t = Transform3D(Basis(), pos)
 	t = t.rotated_local(axis, rot)
@@ -157,4 +159,5 @@ func random_positive(w :float) -> float:
 	return randf_range(w/10,w)
 
 func random_color() -> Color:
-	return Color(randf(),randf(),randf())
+	return NamedColorList.color_list.pick_random()[0]
+	#return Color(randf(),randf(),randf())
