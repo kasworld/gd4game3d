@@ -10,25 +10,21 @@ var MeshTrailTypeList = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
 #var MeshTrailTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
 
 func _ready() -> void:
-	#MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
-	#MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
-	#MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
-	#MeshTrailTypeList.append_array(MeshTrailTypeList.duplicate())
 	var bound_size = Vector3(100,100,100)
 	$DirectionalLight3D.position = bound_size *0.45
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 	b_box = AABB( -bound_size/2, bound_size)
 
 	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().set_ColorMode_OnBounce().init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		var ball = meshtrail_scene.instantiate().with_color_OnBounce().init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
 		meshtrail_list.append(ball)
 		add_child(ball)
 	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().set_ColorMode_MeshGradient().init( bounce, 0.5, randi_range(10,100), mt, Vector3.ZERO)
+		var ball = meshtrail_scene.instantiate().with_color_MeshGradient().init( bounce, 0.5, randi_range(10,100), mt, Vector3.ZERO)
 		meshtrail_list.append(ball)
 		add_child(ball)
 	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().set_ColorMode_ByPosition(b_box).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		var ball = meshtrail_scene.instantiate().with_color_ByPosition(b_box).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
 		meshtrail_list.append(ball)
 		add_child(ball)
 
@@ -39,15 +35,6 @@ func _ready() -> void:
 	make_line2d(Vector2(bound_size.x,bound_size.z),Vector3(0,bound_size.z/2,0), PlaneMesh.FACE_Y, true)
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(-bound_size.z/2,0,0), PlaneMesh.FACE_X, false)
 	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(bound_size.z/2,0,0), PlaneMesh.FACE_X, true)
-
-func add_meshtrail()->void:
-	var pos := Vector3.ZERO
-	var mesh_type = MeshTrailTypeList.pop_front()
-	#var tc := 1
-	var tc := randi_range(10,100)
-	var ball = meshtrail_scene.instantiate().init( bounce, 0.5, tc, mesh_type, pos)
-	meshtrail_list.append(ball)
-	add_child(ball)
 
 func bounce(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce2.v3f(pos, b_box, radius)
@@ -79,9 +66,6 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 	return sp
 
 func _process(delta: float) -> void:
-	#if MeshTrailTypeList.size() > 0:
-		#add_meshtrail()
-
 	$LabelInfo.text = "MeshTrail %d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [
 		meshtrail_list.size(),
 		$MovingCamera.position.x, $MovingCamera.position.y, $MovingCamera.position.z,

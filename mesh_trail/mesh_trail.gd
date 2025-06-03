@@ -9,13 +9,13 @@ var color_to :Color
 var color_progress :int # 0 to mesh_count-1
 # for ColorMode.ByPosition
 var color_aabb :AABB
-func set_ColorMode_OnBounce() -> MeshTrail:
+func with_color_OnBounce() -> MeshTrail:
 	color_mode = ColorMode.OnBounce
 	return self
-func set_ColorMode_MeshGradient() -> MeshTrail:
+func with_color_MeshGradient() -> MeshTrail:
 	color_mode = ColorMode.MeshGradient
 	return self
-func set_ColorMode_ByPosition(c_aabb :AABB) -> MeshTrail:
+func with_color_ByPosition(c_aabb :AABB) -> MeshTrail:
 	color_mode = ColorMode.ByPosition
 	color_aabb = c_aabb
 	return self
