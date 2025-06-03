@@ -3,22 +3,39 @@ class_name MeshTrail
 
 enum ColorMode {OnBounce, MeshGradient, ByPosition }
 var color_mode :ColorMode = ColorMode.OnBounce
+
+func with_color_OnBounce() -> MeshTrail:
+	color_mode = ColorMode.OnBounce
+	return self
+
 # for ColorMode.MeshGradient 
 var color_from :Color # or current color
 var color_to :Color
 var color_progress :int # 0 to mesh_count-1
-# for ColorMode.ByPosition
-var color_aabb :AABB
-func with_color_OnBounce() -> MeshTrail:
-	color_mode = ColorMode.OnBounce
-	return self
+func get_next_color() -> Color:
+	color_progress += 1
+	if color_progress >= multimesh.instance_count:
+		color_from = color_to
+		color_to = random_color_fn.call()
+		color_progress = 0
+	return lerp(color_from, color_to, float(color_progress)/float(multimesh.instance_count))
 func with_color_MeshGradient() -> MeshTrail:
 	color_mode = ColorMode.MeshGradient
 	return self
+
+var color_aabb :AABB
 func with_color_ByPosition(c_aabb :AABB) -> MeshTrail:
 	color_mode = ColorMode.ByPosition
 	color_aabb = c_aabb
 	return self
+	
+var random_color_fn :Callable = random_color
+func set_random_color_fn(fn :Callable) -> MeshTrail:
+	random_color_fn = fn
+	return self
+func random_color() -> Color:
+	#return NamedColorList.color_list.pick_random()[0]
+	return Color(randf(),randf(),randf())
 
 var velocity :Vector3
 var bounce_fn :Callable
@@ -39,8 +56,8 @@ func init(bounce_fn_a :Callable, radius_a :float, mesh_count :int, mesh_type, in
 	speed_max = radius * 120
 	speed_min = radius * 80
 	velocity = Vector3( (randf()-0.5)*speed_max,(randf()-0.5)*speed_max,(randf()-0.5)*speed_max)
-	color_from = random_color()
-	color_to = random_color()
+	color_from = random_color_fn.call()
+	color_to = random_color_fn.call()
 	make_mat_multi(new_mesh_by_type(mesh_type,radius), mesh_count, initial_pos)
 	return self
 
@@ -64,13 +81,6 @@ func make_mat_multi(mesh :Mesh,count :int, initial_pos:Vector3):
 		var t = Transform3D(Basis(), initial_pos)
 		multimesh.set_instance_transform(i,t)
 
-func get_next_color() -> Color:
-	color_progress += 1
-	if color_progress >= multimesh.instance_count:
-		color_from = color_to
-		color_to = random_color()
-		color_progress = 0
-	return lerp(color_from, color_to, float(color_progress)/float(multimesh.instance_count))
 
 func set_color_by_mode(mesh_index :int, pos :Vector3) -> void:
 	var co :Color
@@ -109,7 +119,7 @@ func move_trail(delta: float, oldi :int, newi:int) -> void:
 
 	if bn.bounced != Vector3i.ZERO:
 		if color_mode == ColorMode.OnBounce:
-			color_from = random_color()
+			color_from = random_color_fn.call()
 		current_rotation_velocity =  randfn(0, rotation_velocity_deviation)
 	current_rotation += current_rotation_velocity * delta
 
@@ -157,7 +167,3 @@ func new_mesh_by_type(mesh_type , r :float) -> Mesh:
 
 func random_positive(w :float) -> float:
 	return randf_range(w/10,w)
-
-func random_color() -> Color:
-	return NamedColorList.color_list.pick_random()[0]
-	#return Color(randf(),randf(),randf())
