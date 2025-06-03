@@ -3,7 +3,6 @@ extends Node3D
 var meshtrail_scene = preload("res://mesh_trail/mesh_trail.tscn")
 var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
-var meshtrail_list = []
 var b_box :AABB
 #var MeshTrailTypeList = PlayingCard.make_deck()
 var MeshTrailTypeList = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
@@ -17,24 +16,21 @@ func _ready() -> void:
 
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate().with_color_OnBounce().init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
-		meshtrail_list.append(ball)
-		add_child(ball)
+		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate().with_color_MeshGradient().init( bounce, 0.5, randi_range(10,100), mt, Vector3.ZERO)
-		meshtrail_list.append(ball)
-		add_child(ball)
+		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate().with_color_ByPosition(b_box).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
-		meshtrail_list.append(ball)
-		add_child(ball)
+		$MeshTrailContainer.add_child(ball)
 
-	$MovingCamera.init( b_box, Vector3.ZERO, meshtrail_list[0] )
-	make_line2d(Vector2(bound_size.x,bound_size.y),Vector3(0,0,-bound_size.z/2), PlaneMesh.FACE_Z, false)
-	make_line2d(Vector2(bound_size.x,bound_size.y),Vector3(0,0,bound_size.z/2), PlaneMesh.FACE_Z, true)
-	make_line2d(Vector2(bound_size.x,bound_size.z),Vector3(0,-bound_size.z/2,0), PlaneMesh.FACE_Y, false)
-	make_line2d(Vector2(bound_size.x,bound_size.z),Vector3(0,bound_size.z/2,0), PlaneMesh.FACE_Y, true)
-	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(-bound_size.z/2,0,0), PlaneMesh.FACE_X, false)
-	make_line2d(Vector2(bound_size.y,bound_size.z),Vector3(bound_size.z/2,0,0), PlaneMesh.FACE_X, true)
+	$MovingCamera.init( b_box, Vector3.ZERO, $MeshTrailContainer.get_child(0) )
+	make_line2d(Vector2(b_box.size.x,b_box.size.y), Vector3(b_box.get_center().x, b_box.get_center().y, b_box.position.z),     PlaneMesh.FACE_Z, false)
+	make_line2d(Vector2(b_box.size.x,b_box.size.y), Vector3(b_box.get_center().x, b_box.get_center().y, b_box.end.z),          PlaneMesh.FACE_Z, true)
+	make_line2d(Vector2(b_box.size.x,b_box.size.z), Vector3(b_box.get_center().x, b_box.position.y,     b_box.get_center().z), PlaneMesh.FACE_Y, false)
+	make_line2d(Vector2(b_box.size.x,b_box.size.z), Vector3(b_box.get_center().x, b_box.end.y,          b_box.get_center().z), PlaneMesh.FACE_Y, true)
+	make_line2d(Vector2(b_box.size.y,b_box.size.z), Vector3(b_box.position.x,     b_box.get_center().y, b_box.get_center().z), PlaneMesh.FACE_X, false)
+	make_line2d(Vector2(b_box.size.y,b_box.size.z), Vector3(b_box.end.x,          b_box.get_center().y, b_box.get_center().z), PlaneMesh.FACE_X, true)
 
 func bounce(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce2.v3f(pos, b_box, radius)
@@ -67,7 +63,7 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 
 func _process(delta: float) -> void:
 	$LabelInfo.text = "MeshTrail %d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [
-		meshtrail_list.size(),
+		$MeshTrailContainer.get_child_count(),
 		$MovingCamera.position.x, $MovingCamera.position.y, $MovingCamera.position.z,
 		1.0/delta]
 

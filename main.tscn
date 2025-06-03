@@ -26,3 +26,5 @@ billboard = 1
 double_sided = false
 text = "hello	"
 font_size = 128
+
+[node name="MeshTrailContainer" type="Node3D" parent="."]
