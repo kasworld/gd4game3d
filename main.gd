@@ -22,16 +22,30 @@ func _ready() -> void:
 	b_box = AABB( -bound_size/2, bound_size)
 
 	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().init_OnBounce().set_get_random_color_fn(random_color3).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		var ball = meshtrail_scene.instantiate(
+			).init_OnBounce(
+			).set_get_random_color_fn(random_color3
+			).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO
+			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().init_MeshGradient().set_get_random_color_fn(random_color3).init( bounce, 0.5, randi_range(10,100), mt, Vector3.ZERO)
+		var ball = meshtrail_scene.instantiate(
+			).init_MeshGradient(
+			).set_get_random_color_fn(random_color3
+			).init( bounce, 0.5, randi_range(10,100), mt, Vector3.ZERO
+			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().init_ByPosition(b_box).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		var ball = meshtrail_scene.instantiate(
+			).init_ByPosition(b_box
+			).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO
+			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate().init_ByPositionFn(get_color_ByPosition).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO)
+		var ball = meshtrail_scene.instantiate(
+			).init_ByPositionFn(get_color_ByPosition
+			).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO
+			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 
 	$MovingCamera.init( b_box, Vector3.ZERO, $MeshTrailContainer.get_child(0) )
