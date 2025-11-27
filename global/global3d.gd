@@ -1,6 +1,6 @@
 extends Node
 
-var font = preload("res://HakgyoansimBareondotumR.ttf")
+var font = preload("res://font/HakgyoansimBareondotumR.ttf")
 
 # for calendar ans date_label
 const weekdaystring = ["일","월","화","수","목","금","토"]

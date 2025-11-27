@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bhjhep3rxbo4v"
-path="res://.godot/imported/HakgyoansimBareondotumR.ttf-26fd2c3d8bc0b89a18b06535f12e42f1.fontdata"
+uid="uid://gdh6qls28unk"
+path="res://.godot/imported/HakgyoansimBareondotumR.ttf-32a8f43a90b9bcd389d2ef9a02137c3c.fontdata"
 
 [deps]
 
-source_file="res://HakgyoansimBareondotumR.ttf"
-dest_files=["res://.godot/imported/HakgyoansimBareondotumR.ttf-26fd2c3d8bc0b89a18b06535f12e42f1.fontdata"]
+source_file="res://font/HakgyoansimBareondotumR.ttf"
+dest_files=["res://.godot/imported/HakgyoansimBareondotumR.ttf-32a8f43a90b9bcd389d2ef9a02137c3c.fontdata"]
 
 [params]
 
@@ -21,6 +21,7 @@ msdf_pixel_range=8
 msdf_size=48
 allow_system_fallback=true
 force_autohinter=false
+modulate_color_glyphs=false
 hinting=1
 subpixel_positioning=1
 keep_rounding_remainders=true

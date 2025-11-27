@@ -20,31 +20,31 @@ func _ready() -> void:
 	$DirectionalLight3D.position = bound_size *0.45
 	$DirectionalLight3D.look_at(Vector3.ZERO)
 	b_box = AABB( -bound_size/2, bound_size)
-
+	var radius := 1.5
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate(
 			).init_OnBounce(
 			).set_get_random_color_fn(random_color3
-			).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO
+			).init( bounce, radius, randi_range(1,10), mt, Vector3.ZERO
 			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate(
 			).init_MeshGradient(
 			).set_get_random_color_fn(random_color3
-			).init( bounce, 0.5, randi_range(10,100), mt, Vector3.ZERO
+			).init( bounce, radius, randi_range(10,100), mt, Vector3.ZERO
 			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate(
 			).init_ByPosition(b_box
-			).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO
+			).init( bounce, radius, randi_range(1,10), mt, Vector3.ZERO
 			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate(
 			).init_ByPositionFn(get_color_ByPosition
-			).init( bounce, 0.5, randi_range(1,10), mt, Vector3.ZERO
+			).init( bounce, radius, randi_range(1,10), mt, Vector3.ZERO
 			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 
