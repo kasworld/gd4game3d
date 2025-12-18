@@ -15,7 +15,54 @@ func get_color_ByPosition(pos :Vector3) -> Color:
 	co = co.inverted()
 	return co
 
+func timed_message_init() -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
+	$TimedMessage.init(80, msgrect,
+		"%s %s" % [
+			ProjectSettings.get_setting("application/config/name"),
+			ProjectSettings.get_setting("application/config/version")
+			] )
+	$TimedMessage.panel_hidden.connect(message_hidden)
+	$TimedMessage.show_message("",0)
+func message_hidden(_s :String) -> void:
+	pass
+
+func ui_panel_init() -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var 짧은길이 :float = min(vp_size.x, vp_size.y)
+	var panel_size := Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$"왼쪽패널".size = panel_size
+	$"왼쪽패널".custom_minimum_size = panel_size
+	$오른쪽패널.size = panel_size
+	$"오른쪽패널".custom_minimum_size = panel_size
+	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
+func on_viewport_size_changed():
+	ui_panel_init()
+
+func label_demo() -> void:
+	if $"오른쪽패널/LabelPerformance".visible:
+		$"오른쪽패널/LabelPerformance".text = """%d FPS (%.2f mspf)
+Currently rendering: occlusion culling:%s
+%d objects
+%dK primitive indices
+%d draw calls""" % [
+		Engine.get_frames_per_second(),1000.0 / Engine.get_frames_per_second(),
+		get_tree().root.use_occlusion_culling,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) * 0.001,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
+		]
+	#if $"오른쪽패널/LabelInfo".visible:
+		#$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
+
+
+
 func _ready() -> void:
+	get_viewport().size_changed.connect(on_viewport_size_changed)
+	ui_panel_init()
+	timed_message_init()
+
 	var bound_size = Vector3(100,100,100)
 	$DirectionalLight3D.position = bound_size *0.45
 	$DirectionalLight3D.look_at(Vector3.ZERO)
@@ -57,7 +104,7 @@ func _ready() -> void:
 	make_line2d(Vector2(b_box.size.y,b_box.size.z), Vector3(b_box.end.x,          b_box.get_center().y, b_box.get_center().z), PlaneMesh.FACE_X, true)
 
 func bounce(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
-	return Bounce2.v3f(pos, b_box, radius)
+	return Bounce.v3f(pos, b_box, radius)
 
 var color_list_light = NamedColorList.make_light_color_list()
 var color_list_dark = NamedColorList.make_dark_color_list()
@@ -95,6 +142,8 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 	return sp
 
 func _process(delta: float) -> void:
+	label_demo()
+
 	$LabelInfo.text = "MeshTrail %d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [
 		$MeshTrailContainer.get_child_count(),
 		$MovingCamera.position.x, $MovingCamera.position.y, $MovingCamera.position.z,

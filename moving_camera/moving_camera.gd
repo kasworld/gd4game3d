@@ -21,7 +21,7 @@ func _process(delta: float) -> void:
 	$Camera3D.look_at(dest_node3d.position)
 
 	position += velocity * delta
-	var bn = Bounce2.v3f(position, bounce_area, radius)
+	var bn = Bounce.v3f(position, bounce_area, radius)
 	for i in 3:
 		# change vel on bounce
 		if bn.bounced[i] != 0 :

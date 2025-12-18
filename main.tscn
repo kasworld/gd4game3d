@@ -1,7 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://c7o2uicaj4xv7"]
+[gd_scene load_steps=8 format=3 uid="uid://c7o2uicaj4xv7"]
 
 [ext_resource type="Script" uid="uid://bkjtdglfi770m" path="res://main.gd" id="1_nnvt2"]
 [ext_resource type="PackedScene" uid="uid://cpm7kd6k102e" path="res://moving_camera/moving_camera.tscn" id="3_81qi8"]
+[ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="3_h2yge"]
+
+[sub_resource type="Theme" id="Theme_h2yge"]
+default_font_size = 32
+
+[sub_resource type="Theme" id="Theme_0xm2m"]
+default_font_size = 32
+
+[sub_resource type="SystemFont" id="SystemFont_bejao"]
+
+[sub_resource type="Theme" id="Theme_1bvp3"]
+resource_local_to_scene = true
+default_font = SubResource("SystemFont_bejao")
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_nnvt2")
@@ -28,3 +41,22 @@ text = "hello	"
 font_size = 128
 
 [node name="MeshTrailContainer" type="Node3D" parent="."]
+
+[node name="왼쪽패널" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = SubResource("Theme_h2yge")
+
+[node name="오른쪽패널" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = SubResource("Theme_0xm2m")
+
+[node name="LabelPerformance" type="Label" parent="오른쪽패널"]
+layout_mode = 2
+
+[node name="LabelInfo" type="Label" parent="오른쪽패널"]
+layout_mode = 2
+
+[node name="TimedMessage" parent="." instance=ExtResource("3_h2yge")]
+theme = SubResource("Theme_1bvp3")
