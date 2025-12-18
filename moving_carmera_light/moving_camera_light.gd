@@ -77,7 +77,7 @@ func move_hober_around_z(t :float, center :Vector3, radius :float, height :float
 	position = Vector3( sin(t)*radius, cos(t)*radius, height ) + center
 	look_at(center)
 
-func bounce_within_aabb(delta :float, bounce_area :AABB, velocity :Vector3, center :Vector3, radius :float) -> void:
+func bounce_within_aabb(delta :float, bounce_area :AABB, velocity :Vector3, center :Vector3, radius :float) -> Vector3:
 	position += velocity * delta
 	var bn = Bounce.v3f(position, bounce_area, radius)
 	for i in 3:
@@ -86,6 +86,7 @@ func bounce_within_aabb(delta :float, bounce_area :AABB, velocity :Vector3, cent
 			velocity[i] = -bn.bounced[i] * abs(velocity[i])
 	position = bn.pos
 	look_at(center)
+	return velocity
 
 func set_center_pos_far(center :Vector3, pos :Vector3, far :float) -> void:
 	position = pos

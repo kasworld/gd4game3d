@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://c7o2uicaj4xv7"]
+[gd_scene load_steps=9 format=3 uid="uid://c7o2uicaj4xv7"]
 
 [ext_resource type="Script" uid="uid://bkjtdglfi770m" path="res://main.gd" id="1_nnvt2"]
-[ext_resource type="PackedScene" uid="uid://cpm7kd6k102e" path="res://moving_camera/moving_camera.tscn" id="3_81qi8"]
+[ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="3_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow3d/axis_arrow_3d.tscn" id="4_1bvp3"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 32
@@ -20,6 +21,7 @@ default_font = SubResource("SystemFont_bejao")
 script = ExtResource("1_nnvt2")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 1000.0
 
@@ -30,22 +32,15 @@ shadow_enabled = true
 omni_range = 1000.0
 omni_shadow_mode = 0
 
-[node name="MovingCamera" parent="." instance=ExtResource("3_81qi8")]
-
-[node name="LabelInfo" type="Label3D" parent="."]
-sorting_offset = 1.0
-pixel_size = 0.01
-billboard = 1
-double_sided = false
-text = "hello	"
-font_size = 128
-
 [node name="MeshTrailContainer" type="Node3D" parent="."]
 
 [node name="왼쪽패널" type="VBoxContainer" parent="."]
 offset_right = 40.0
 offset_bottom = 40.0
 theme = SubResource("Theme_h2yge")
+
+[node name="Label" type="Label" parent="왼쪽패널"]
+layout_mode = 2
 
 [node name="오른쪽패널" type="VBoxContainer" parent="."]
 offset_right = 40.0
@@ -60,3 +55,9 @@ layout_mode = 2
 
 [node name="TimedMessage" parent="." instance=ExtResource("3_h2yge")]
 theme = SubResource("Theme_1bvp3")
+
+[node name="AxisArrow3D" parent="." instance=ExtResource("4_1bvp3")]
+
+[node name="BounceCameraLight" parent="." instance=ExtResource("3_1bvp3")]
+
+[node name="FixedCameraLight" parent="." instance=ExtResource("3_1bvp3")]

@@ -3,7 +3,7 @@ extends Node3D
 var meshtrail_scene = preload("res://mesh_trail/mesh_trail.tscn")
 var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
-var b_box :AABB
+const WorldSize := Vector3(100,100,100)
 #var MeshTrailTypeList = PlayingCard.make_deck()
 var MeshTrailTypeList = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
 #var MeshTrailTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
@@ -53,21 +53,26 @@ Currently rendering: occlusion culling:%s
 		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) * 0.001,
 		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
 		]
-	#if $"오른쪽패널/LabelInfo".visible:
-		#$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
-
-
+	if $"오른쪽패널/LabelInfo".visible:
+		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
+	$"왼쪽패널/Label".text = "MeshTrail %d" % [$MeshTrailContainer.get_child_count()]
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	ui_panel_init()
 	timed_message_init()
 
-	var bound_size = Vector3(100,100,100)
-	$DirectionalLight3D.position = bound_size *0.45
-	$DirectionalLight3D.look_at(Vector3.ZERO)
+	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
+	$OmniLight3D.omni_range = WorldSize.length()*2
+	$BounceCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
+	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
+	#$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
+	#$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
+	$AxisArrow3D.set_size(10)
+
+	var bound_size = WorldSize
 	b_box = AABB( -bound_size/2, bound_size)
-	var radius := 1.5
+	velocity = Vector3( (randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate(
 			).init_OnBounce(
@@ -95,7 +100,7 @@ func _ready() -> void:
 			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 
-	$MovingCamera.init( b_box, Vector3.ZERO, $MeshTrailContainer.get_child(0) )
+	#$MovingCamera.init( b_box, Vector3.ZERO, $MeshTrailContainer.get_child(0) )
 	make_line2d(Vector2(b_box.size.x,b_box.size.y), Vector3(b_box.get_center().x, b_box.get_center().y, b_box.position.z),     PlaneMesh.FACE_Z, false)
 	make_line2d(Vector2(b_box.size.x,b_box.size.y), Vector3(b_box.get_center().x, b_box.get_center().y, b_box.end.z),          PlaneMesh.FACE_Z, true)
 	make_line2d(Vector2(b_box.size.x,b_box.size.z), Vector3(b_box.get_center().x, b_box.position.y,     b_box.get_center().z), PlaneMesh.FACE_Y, false)
@@ -103,8 +108,8 @@ func _ready() -> void:
 	make_line2d(Vector2(b_box.size.y,b_box.size.z), Vector3(b_box.position.x,     b_box.get_center().y, b_box.get_center().z), PlaneMesh.FACE_X, false)
 	make_line2d(Vector2(b_box.size.y,b_box.size.z), Vector3(b_box.end.x,          b_box.get_center().y, b_box.get_center().z), PlaneMesh.FACE_X, true)
 
-func bounce(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
-	return Bounce.v3f(pos, b_box, radius)
+func bounce(_oldpos:Vector3, pos :Vector3, radiusa :float) -> Dictionary:
+	return Bounce.v3f(pos, b_box, radiusa)
 
 var color_list_light = NamedColorList.make_light_color_list()
 var color_list_dark = NamedColorList.make_dark_color_list()
@@ -141,16 +146,34 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 	line2d_list.append(sp)
 	return sp
 
+var b_box :AABB
+var radius := 1.5
+var velocity :Vector3
 func _process(delta: float) -> void:
 	label_demo()
+	#var now := Time.get_unix_time_from_system()
+	#var t := now /2.3
+	if $BounceCameraLight.is_current_camera():
+		velocity = $BounceCameraLight.bounce_within_aabb(delta,b_box, velocity,  Vector3.ZERO, radius )
+	#elif $MovingCameraLightHober.is_current_camera():
+		#$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+	#elif $MovingCameraLightAround.is_current_camera():
+		#$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 
-	$LabelInfo.text = "MeshTrail %d\n(%.1f,%.1f,%.1f)\n%.1fFPS" % [
-		$MeshTrailContainer.get_child_count(),
-		$MovingCamera.position.x, $MovingCamera.position.y, $MovingCamera.position.z,
-		1.0/delta]
+func _on_카메라변경_pressed() -> void:
+	MovingCameraLight.NextCamera()
+
+func _on_button_fov_up_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_inc()
+
+func _on_button_fov_down_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_dec()
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
+	KEY_ENTER:_on_카메라변경_pressed,
+	KEY_PAGEUP:_on_button_fov_up_pressed,
+	KEY_PAGEDOWN:_on_button_fov_down_pressed,
 }
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -158,6 +181,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		var fn = key2fn.get(event.keycode)
 		if fn != null:
 			fn.call()
+		if $FixedCameraLight.is_current_camera():
+			var fi = FlyNode3D.Key2Info.get(event.keycode)
+			if fi != null:
+				FlyNode3D.fly_node3d($FixedCameraLight, fi)
 	elif event is InputEventMouseButton and event.is_pressed():
 		pass
 
