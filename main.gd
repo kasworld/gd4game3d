@@ -4,16 +4,7 @@ var meshtrail_scene = preload("res://mesh_trail/mesh_trail.tscn")
 var line2d_scene = preload("res://move_line2d/move_line_2d.tscn")
 
 const WorldSize := Vector3(100,100,100)
-#var MeshTrailTypeList = PlayingCard.make_deck()
-var MeshTrailTypeList = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
-#var MeshTrailTypeList = [0,1,2,3,4,5,"♠","♣","♥","♦"]
 
-func get_color_ByPosition(pos :Vector3) -> Color:
-	var co :Color
-	for i in 3:
-		co[i] = (pos[i] - b_box.position[i]) / b_box.size[i]
-	co = co.inverted()
-	return co
 
 func timed_message_init() -> void:
 	var vp_size := get_viewport().get_visible_rect().size
@@ -66,8 +57,8 @@ func _ready() -> void:
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$BounceCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
-	#$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
-	#$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
+	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
+	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$AxisArrow3D.set_size(10)
 
 	var bound_size = WorldSize
@@ -100,7 +91,6 @@ func _ready() -> void:
 			).set_speed(20,40,0.05)
 		$MeshTrailContainer.add_child(ball)
 
-	#$MovingCamera.init( b_box, Vector3.ZERO, $MeshTrailContainer.get_child(0) )
 	make_line2d(Vector2(b_box.size.x,b_box.size.y), Vector3(b_box.get_center().x, b_box.get_center().y, b_box.position.z),     PlaneMesh.FACE_Z, false)
 	make_line2d(Vector2(b_box.size.x,b_box.size.y), Vector3(b_box.get_center().x, b_box.get_center().y, b_box.end.z),          PlaneMesh.FACE_Z, true)
 	make_line2d(Vector2(b_box.size.x,b_box.size.z), Vector3(b_box.get_center().x, b_box.position.y,     b_box.get_center().z), PlaneMesh.FACE_Y, false)
@@ -110,6 +100,14 @@ func _ready() -> void:
 
 func bounce(_oldpos:Vector3, pos :Vector3, radiusa :float) -> Dictionary:
 	return Bounce.v3f(pos, b_box, radiusa)
+func get_color_ByPosition(pos :Vector3) -> Color:
+	var co :Color
+	for i in 3:
+		co[i] = (pos[i] - b_box.position[i]) / b_box.size[i]
+	co = co.inverted()
+	return co
+
+var MeshTrailTypeList = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
 
 var color_list_light = NamedColorList.make_light_color_list()
 var color_list_dark = NamedColorList.make_dark_color_list()
@@ -133,14 +131,14 @@ func make_line2d(sz :Vector2, p :Vector3, face :PlaneMesh.Orientation ,flip :boo
 	sv.size = size_pixel
 	sv.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	sv.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
-	#sv.transparent_bg = true
+	sv.transparent_bg = true
 	sv.add_child(l2d)
 	add_child(sv)
 	var sp = MeshInstance3D.new()
 	sp.mesh = mesh
 	sp.position = p
 	sp.material_override = StandardMaterial3D.new()
-	#sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
 	sp.material_override.albedo_texture = sv.get_texture()
 	add_child(sp)
 	line2d_list.append(sp)
@@ -151,14 +149,14 @@ var radius := 1.5
 var velocity :Vector3
 func _process(delta: float) -> void:
 	label_demo()
-	#var now := Time.get_unix_time_from_system()
-	#var t := now /2.3
+	var now := Time.get_unix_time_from_system()
+	var t := now /2.3
 	if $BounceCameraLight.is_current_camera():
-		velocity = $BounceCameraLight.bounce_within_aabb(delta,b_box, velocity,  Vector3.ZERO, radius )
-	#elif $MovingCameraLightHober.is_current_camera():
-		#$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
-	#elif $MovingCameraLightAround.is_current_camera():
-		#$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+		velocity = $BounceCameraLight.bounce_within_aabb(delta, b_box, velocity, Vector3.ZERO, radius )
+	elif $MovingCameraLightHober.is_current_camera():
+		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+	elif $MovingCameraLightAround.is_current_camera():
+		$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()

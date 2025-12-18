@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c7o2uicaj4xv7"]
+[gd_scene load_steps=12 format=3 uid="uid://c7o2uicaj4xv7"]
 
 [ext_resource type="Script" uid="uid://bkjtdglfi770m" path="res://main.gd" id="1_nnvt2"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="3_1bvp3"]
@@ -16,6 +16,15 @@ default_font_size = 32
 [sub_resource type="Theme" id="Theme_1bvp3"]
 resource_local_to_scene = true
 default_font = SubResource("SystemFont_bejao")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
+
+[sub_resource type="Sky" id="Sky_lquwl"]
+sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
+
+[sub_resource type="Environment" id="Environment_7mycd"]
+background_mode = 2
+sky = SubResource("Sky_lquwl")
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_nnvt2")
@@ -61,3 +70,10 @@ theme = SubResource("Theme_1bvp3")
 [node name="BounceCameraLight" parent="." instance=ExtResource("3_1bvp3")]
 
 [node name="FixedCameraLight" parent="." instance=ExtResource("3_1bvp3")]
+
+[node name="MovingCameraLightHober" parent="." instance=ExtResource("3_1bvp3")]
+
+[node name="MovingCameraLightAround" parent="." instance=ExtResource("3_1bvp3")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_7mycd")
