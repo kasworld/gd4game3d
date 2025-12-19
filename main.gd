@@ -66,29 +66,29 @@ func _ready() -> void:
 	velocity = Vector3( (randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate(
-			).init_OnBounce(
+			).set_ColorChange_OnBounce(
 			).set_get_random_color_fn(random_color3
 			).init( bounce, radius, randi_range(1,10), mt, Vector3.ZERO
-			).set_speed(20,40,0.05)
+			).set_speed(20,40)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate(
-			).init_MeshGradient(
+			).set_ColorChange_MeshGradient(
 			).set_get_random_color_fn(random_color3
 			).init( bounce, radius, randi_range(10,100), mt, Vector3.ZERO
-			).set_speed(20,40,0.05)
+			).set_speed(20,40)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate(
-			).init_ByPosition(b_box
+			).set_ColorChange_ByPosition(b_box
 			).init( bounce, radius, randi_range(1,10), mt, Vector3.ZERO
-			).set_speed(20,40,0.05)
+			).set_speed(20,40)
 		$MeshTrailContainer.add_child(ball)
 	for mt in MeshTrailTypeList:
 		var ball = meshtrail_scene.instantiate(
-			).init_ByPositionFn(get_color_ByPosition
+			).set_ColorChange_ByPositionFn(get_color_ByPosition
 			).init( bounce, radius, randi_range(1,10), mt, Vector3.ZERO
-			).set_speed(20,40,0.05)
+			).set_speed(20,40)
 		$MeshTrailContainer.add_child(ball)
 
 func bounce(_oldpos:Vector3, pos :Vector3, radiusa :float) -> Dictionary:
@@ -116,6 +116,10 @@ var radius := 1.5
 var velocity :Vector3
 func _process(delta: float) -> void:
 	label_demo()
+
+	for mt in $MeshTrailContainer.get_children():
+		mt.move(delta)
+
 	var now := Time.get_unix_time_from_system()
 	var t := now /2.3
 	if $BounceCameraLight.is_current_camera():
