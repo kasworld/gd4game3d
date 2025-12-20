@@ -1,6 +1,8 @@
 extends MultiMeshShape
 class_name MeshTrail
 
+## use MultiMeshShape init_with_alpha init_with_material
+
 enum ColorChange {OnBounce, MeshGradient, ByPosition }
 var color_change_mode :ColorChange = ColorChange.OnBounce
 # for ColorChange MeshGradient, OnBounce
@@ -32,15 +34,11 @@ var color_aabb :AABB
 func set_ColorChange_ByPosition(c_aabb :AABB) -> MeshTrail:
 	color_change_mode = ColorChange.ByPosition
 	color_aabb = c_aabb
-	#color_from = get_random_color_fn.call()
-	#color_to = get_random_color_fn.call()
 	return self
 
 func set_ColorChange_ByPositionFn(fn :Callable) -> MeshTrail:
 	color_change_mode = ColorChange.ByPosition
 	get_color_ByPosition_fn = fn
-	#color_from = get_random_color_fn.call()
-	#color_to = get_random_color_fn.call()
 	return self
 
 var get_color_ByPosition_fn :Callable = get_color_ByPosition
@@ -64,15 +62,6 @@ var obj_cursor :int
 var current_rotation :float
 var current_rotation_velocity :float
 
-func init_trail_with_alpha(
-		mesh :Mesh,
-		inst_count :int,
-		alpha :float = 1.0,
-		initial_pos :Vector3 = Vector3.ZERO,
-		) -> MeshTrail:
-	init_with_alpha(mesh, inst_count, alpha, initial_pos)
-	return self
-
 func set_speed(mins :float, maxs :float) -> MeshTrail:
 	speed_max = maxs
 	speed_min = mins
@@ -90,12 +79,7 @@ func set_color_by_mode(inst_index :int, pos :Vector3) -> void:
 			co = get_color_MeshGradient()
 	multimesh.set_instance_color(inst_index, co)
 
-func set_multi_position_rotation(i :int, pos :Vector3, axis :Vector3, rot :float) -> void:
-	var t := Transform3D(Basis(), pos)
-	t = t.rotated_local(axis, rot)
-	multimesh.set_instance_transform(i,t )
-
-func move(delta :float, bounce_fn :Callable, radius :float, rotation_velocity_deviation :float = 4*PI,) -> void:
+func move_trail(delta :float, bounce_fn :Callable, radius :float, rotation_velocity_deviation :float = 4*PI,) -> void:
 	var old_cursor := obj_cursor
 	obj_cursor +=1
 	obj_cursor %= multimesh.instance_count
@@ -116,7 +100,7 @@ func _move_trail(delta: float, oldi :int, newi:int, bounce_fn :Callable, radius 
 		current_rotation_velocity =  randfn(0, rotation_velocity_deviation)
 	current_rotation += current_rotation_velocity * delta
 
-	set_multi_position_rotation(newi, bn.pos, head_velocity.normalized(), current_rotation)
+	set_inst_position_rotation(newi, bn.pos, head_velocity.normalized(), current_rotation)
 	set_color_by_mode(newi, newpos)
 
 	if head_velocity.length() > speed_max:

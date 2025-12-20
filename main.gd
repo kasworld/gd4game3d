@@ -61,7 +61,7 @@ func _ready() -> void:
 	$WallBox.mesh.size = WorldSize
 
 	var bound_size = WorldSize
-	b_box = AABB( -bound_size/2, bound_size)
+	bound_aabb = AABB( -bound_size/2, bound_size)
 	velocity = Vector3( (randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3)
 
 	var mesh := BoxMesh.new()
@@ -70,18 +70,18 @@ func _ready() -> void:
 		var ball :MeshTrail = meshtrail_scene.instantiate(
 			#).set_ColorChange_OnBounce(
 			#).set_ColorChange_MeshGradient(
-			).set_ColorChange_ByPosition(b_box
+			).set_ColorChange_ByPosition(bound_aabb
 			#).set_ColorChange_ByPositionFn(get_color_ByPosition
-			).init_trail_with_alpha(mesh, 100,  1.0 , Vector3.ZERO,
+			).init_with_alpha(mesh, 100,  1.0 , Vector3.ZERO,
 			).set_speed(20,40)
 		$MeshTrailContainer.add_child(ball)
 
 func bounce(_oldpos:Vector3, pos :Vector3, radiusa :float) -> Dictionary:
-	return Bounce.v3f(pos, b_box, radiusa)
+	return Bounce.v3f(pos, bound_aabb, radiusa)
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color
 	for i in 3:
-		co[i] = (pos[i] - b_box.position[i]) / b_box.size[i]
+		co[i] = (pos[i] - bound_aabb.position[i]) / bound_aabb.size[i]
 	co = co.inverted()
 	return co
 
@@ -94,19 +94,19 @@ func random_color2() -> Color:
 func random_color3() -> Color:
 	return color_list_dark.pick_random()[0]
 
-var b_box :AABB
+var bound_aabb :AABB
 var mesh_radius := 1.5
 var velocity :Vector3
 func _process(delta: float) -> void:
 	label_demo()
 
 	for mt in $MeshTrailContainer.get_children():
-		mt.move(delta,bounce, mesh_radius, 4*PI,)
+		mt.move_trail(delta,bounce, mesh_radius, 4*PI,)
 
 	var now := Time.get_unix_time_from_system()
 	var t := now /2.3
 	if $BounceCameraLight.is_current_camera():
-		velocity = $BounceCameraLight.bounce_within_aabb(delta, b_box, velocity, Vector3.ZERO, mesh_radius )
+		velocity = $BounceCameraLight.bounce_within_aabb(delta, bound_aabb, velocity, Vector3.ZERO, mesh_radius )
 	elif $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	elif $MovingCameraLightAround.is_current_camera():
