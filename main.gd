@@ -1,6 +1,5 @@
 extends Node3D
 
-
 const WorldSize := Vector3(100,100,100)
 
 func timed_message_init() -> void:
@@ -64,43 +63,18 @@ func _ready() -> void:
 	var bound_size = WorldSize
 	b_box = AABB( -bound_size/2, bound_size)
 	velocity = Vector3( (randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3)
-	#for mt in MeshTrailTypeList:
-		#var ball = meshtrail_scene.instantiate(
-			#).set_ColorChange_OnBounce(
-			#).set_get_random_color_fn(random_color1
-			#).init( bounce, radius, randi_range(1,100), mt, Vector3.ZERO
-			#).set_speed(20,40)
-		#$MeshTrailContainer.add_child(ball)
-	#for mt in MeshTrailTypeList:
-		#var ball = meshtrail_scene.instantiate(
-			#).set_ColorChange_MeshGradient(
-			#).set_get_random_color_fn(random_color1
-			#).init( bounce, radius, randi_range(10,100), mt, Vector3.ZERO
-			#).set_speed(20,40)
-		#$MeshTrailContainer.add_child(ball)
-	#for mt in MeshTrailTypeList:
-		#var ball = meshtrail_scene.instantiate(
-			#).set_ColorChange_ByPosition(b_box
-			#).init( bounce, radius, randi_range(100,1000), mt, Vector3.ZERO
-			#).set_speed(20,40)
-		#$MeshTrailContainer.add_child(ball)
-	#for mt in MeshTrailTypeList:
-		#var ball = meshtrail_scene.instantiate(
-			#).set_ColorChange_ByPositionFn(get_color_ByPosition
-			#).init( bounce, radius, randi_range(10,1000), mt, Vector3.ZERO
-			#).set_speed(20,40)
-		#$MeshTrailContainer.add_child(ball)
 
-	var mesh := MeshTrail.NewMeshByType("I",radius)
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(mesh_radius*2, mesh_radius*2, 0.1)
 	for i in 100:
 		var ball :MeshTrail = meshtrail_scene.instantiate(
 			#).set_ColorChange_OnBounce(
-			).set_ColorChange_MeshGradient(
-			#).set_ColorChange_ByPosition(b_box
+			#).set_ColorChange_MeshGradient(
+			).set_ColorChange_ByPosition(b_box
+			#).set_ColorChange_ByPositionFn(get_color_ByPosition
 			).init_trail_with_alpha(mesh, 100,  1.0 , Vector3.ZERO,
 			).set_speed(20,40)
 		$MeshTrailContainer.add_child(ball)
-
 
 func bounce(_oldpos:Vector3, pos :Vector3, radiusa :float) -> Dictionary:
 	return Bounce.v3f(pos, b_box, radiusa)
@@ -110,8 +84,6 @@ func get_color_ByPosition(pos :Vector3) -> Color:
 		co[i] = (pos[i] - b_box.position[i]) / b_box.size[i]
 	co = co.inverted()
 	return co
-
-var MeshTrailTypeList = PlayingCard.make_deck()  #  ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
 
 var color_list_light = NamedColorList.make_light_color_list()
 var color_list_dark = NamedColorList.make_dark_color_list()
@@ -123,18 +95,18 @@ func random_color3() -> Color:
 	return color_list_dark.pick_random()[0]
 
 var b_box :AABB
-var radius := 1.5
+var mesh_radius := 1.5
 var velocity :Vector3
 func _process(delta: float) -> void:
 	label_demo()
 
 	for mt in $MeshTrailContainer.get_children():
-		mt.move(delta,bounce, radius, 4*PI,)
+		mt.move(delta,bounce, mesh_radius, 4*PI,)
 
 	var now := Time.get_unix_time_from_system()
 	var t := now /2.3
 	if $BounceCameraLight.is_current_camera():
-		velocity = $BounceCameraLight.bounce_within_aabb(delta, b_box, velocity, Vector3.ZERO, radius )
+		velocity = $BounceCameraLight.bounce_within_aabb(delta, b_box, velocity, Vector3.ZERO, mesh_radius )
 	elif $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	elif $MovingCameraLightAround.is_current_camera():
