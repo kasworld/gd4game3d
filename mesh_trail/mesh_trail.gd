@@ -40,6 +40,8 @@ var color_change_mode :ColorChange = ColorChange.OnBounce
 
 func set_ColorChange_OnBounce() -> MeshTrail:
 	color_change_mode = ColorChange.OnBounce
+	color_from = get_random_color_fn.call()
+	color_to = get_random_color_fn.call()
 	return self
 
 # for ColorChange.MeshGradient
@@ -56,17 +58,23 @@ func get_color_MeshGradient() -> Color:
 
 func set_ColorChange_MeshGradient() -> MeshTrail:
 	color_change_mode = ColorChange.MeshGradient
+	color_from = get_random_color_fn.call()
+	color_to = get_random_color_fn.call()
 	return self
 
 var color_aabb :AABB
 func set_ColorChange_ByPosition(c_aabb :AABB) -> MeshTrail:
 	color_change_mode = ColorChange.ByPosition
 	color_aabb = c_aabb
+	color_from = get_random_color_fn.call()
+	color_to = get_random_color_fn.call()
 	return self
 
 func set_ColorChange_ByPositionFn(fn :Callable) -> MeshTrail:
 	color_change_mode = ColorChange.ByPosition
 	get_color_ByPosition_fn = fn
+	color_from = get_random_color_fn.call()
+	color_to = get_random_color_fn.call()
 	return self
 
 var get_color_ByPosition_fn :Callable = get_color_ByPosition
@@ -84,38 +92,25 @@ func get_random_color() -> Color:
 	return Color(randf(),randf(),randf())
 
 var head_velocity :Vector3
-var bounce_fn :Callable
-var radius :float
 var speed_max :float
 var speed_min :float
 var obj_cursor :int
 var current_rotation :float
 var current_rotation_velocity :float
-var rotation_velocity_deviation :float
 
 func init_trail_with_alpha(
 		mesh :Mesh,
 		inst_count :int,
-		bounce_fn_a :Callable,
-		radius_a :float,
-		rotation_velocity_deviation_a :float = 4*PI,
 		alpha :float = 1.0,
 		initial_pos :Vector3 = Vector3.ZERO,
 		) -> MeshTrail:
-	radius = radius_a
-	bounce_fn = bounce_fn_a
-	rotation_velocity_deviation = rotation_velocity_deviation_a
-	speed_max = radius * 40
-	speed_min = radius * 20
-	head_velocity = Vector3( (randf()-0.5)*speed_max, (randf()-0.5)*speed_max, (randf()-0.5)*speed_max)
-	color_from = get_random_color_fn.call()
-	color_to = get_random_color_fn.call()
 	init_with_alpha(mesh, inst_count, alpha, initial_pos)
 	return self
 
 func set_speed(mins :float, maxs :float) -> MeshTrail:
 	speed_max = maxs
 	speed_min = mins
+	head_velocity = Vector3( (randf()-0.5)*speed_max, (randf()-0.5)*speed_max, (randf()-0.5)*speed_max)
 	return self
 
 func set_color_by_mode(inst_index :int, pos :Vector3) -> void:
@@ -134,13 +129,13 @@ func set_multi_pos_rot(i :int, pos :Vector3, axis :Vector3, rot :float) -> void:
 	t = t.rotated_local(axis, rot)
 	multimesh.set_instance_transform(i,t )
 
-func move(delta :float) -> void:
+func move(delta :float, bounce_fn :Callable, radius :float, rotation_velocity_deviation :float = 4*PI,) -> void:
 	var old_cursor := obj_cursor
 	obj_cursor +=1
 	obj_cursor %= multimesh.instance_count
-	_move_trail(delta, old_cursor, obj_cursor)
+	_move_trail(delta, old_cursor, obj_cursor, bounce_fn, radius, rotation_velocity_deviation)
 
-func _move_trail(delta: float, oldi :int, newi:int) -> void:
+func _move_trail(delta: float, oldi :int, newi:int, bounce_fn :Callable, radius :float, rotation_velocity_deviation :float) -> void:
 	var oldpos :Vector3 = multimesh.get_instance_transform(oldi).origin
 	var newpos :Vector3 = oldpos + head_velocity * delta
 	var bn = bounce_fn.call(oldpos,newpos,radius)

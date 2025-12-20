@@ -95,7 +95,7 @@ func _ready() -> void:
 	for i in 100:
 		var ball :MeshTrail = meshtrail_scene.instantiate(
 			).set_ColorChange_ByPosition(b_box
-			).init_trail_with_alpha(mesh, randi_range(100,1000), bounce, radius, 4*PI, 1.0 , Vector3.ZERO,
+			).init_trail_with_alpha(mesh, randi_range(100,1000),  1.0 , Vector3.ZERO,
 			).set_speed(20,40)
 		$MeshTrailContainer.add_child(ball)
 
@@ -127,7 +127,7 @@ func _process(delta: float) -> void:
 	label_demo()
 
 	for mt in $MeshTrailContainer.get_children():
-		mt.move(delta)
+		mt.move(delta,bounce, radius, 4*PI,)
 
 	var now := Time.get_unix_time_from_system()
 	var t := now /2.3
