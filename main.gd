@@ -94,8 +94,10 @@ func _ready() -> void:
 	var mesh := MeshTrail.NewMeshByType("I",radius)
 	for i in 100:
 		var ball :MeshTrail = meshtrail_scene.instantiate(
-			).set_ColorChange_ByPosition(b_box
-			).init_trail_with_alpha(mesh, randi_range(100,1000),  1.0 , Vector3.ZERO,
+			#).set_ColorChange_OnBounce(
+			).set_ColorChange_MeshGradient(
+			#).set_ColorChange_ByPosition(b_box
+			).init_trail_with_alpha(mesh, 100,  1.0 , Vector3.ZERO,
 			).set_speed(20,40)
 		$MeshTrailContainer.add_child(ball)
 

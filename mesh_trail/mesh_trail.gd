@@ -66,15 +66,15 @@ var color_aabb :AABB
 func set_ColorChange_ByPosition(c_aabb :AABB) -> MeshTrail:
 	color_change_mode = ColorChange.ByPosition
 	color_aabb = c_aabb
-	color_from = get_random_color_fn.call()
-	color_to = get_random_color_fn.call()
+	#color_from = get_random_color_fn.call()
+	#color_to = get_random_color_fn.call()
 	return self
 
 func set_ColorChange_ByPositionFn(fn :Callable) -> MeshTrail:
 	color_change_mode = ColorChange.ByPosition
 	get_color_ByPosition_fn = fn
-	color_from = get_random_color_fn.call()
-	color_to = get_random_color_fn.call()
+	#color_from = get_random_color_fn.call()
+	#color_to = get_random_color_fn.call()
 	return self
 
 var get_color_ByPosition_fn :Callable = get_color_ByPosition
