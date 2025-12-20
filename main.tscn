@@ -1,10 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://c7o2uicaj4xv7"]
+[gd_scene load_steps=12 format=3 uid="uid://c7o2uicaj4xv7"]
 
 [ext_resource type="Script" uid="uid://bkjtdglfi770m" path="res://main.gd" id="1_nnvt2"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="3_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="3_h2yge"]
 [ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow3d/axis_arrow_3d.tscn" id="4_1bvp3"]
-[ext_resource type="PackedScene" uid="uid://bhb3f3tv6l0yh" path="res://mesh_trail_box.tscn" id="5_lquwl"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 32
@@ -68,11 +67,5 @@ theme = SubResource("Theme_1bvp3")
 
 [node name="FixedCameraLight" parent="." instance=ExtResource("3_1bvp3")]
 
-[node name="MovingCameraLightHober" parent="." instance=ExtResource("3_1bvp3")]
-
-[node name="MovingCameraLightAround" parent="." instance=ExtResource("3_1bvp3")]
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7mycd")
-
-[node name="MeshTrailBox" parent="." instance=ExtResource("5_lquwl")]

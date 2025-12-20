@@ -20,3 +20,7 @@ mesh = SubResource("BoxMesh_0ck6v")
 [node name="MeshTrailContainer" type="Node3D" parent="."]
 
 [node name="BounceCameraLight" parent="." instance=ExtResource("2_lc0n3")]
+
+[node name="MovingCameraLightHober" parent="." instance=ExtResource("2_lc0n3")]
+
+[node name="MovingCameraLightAround" parent="." instance=ExtResource("2_lc0n3")]

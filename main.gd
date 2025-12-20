@@ -53,20 +53,15 @@ func _ready() -> void:
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
-	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
-	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$AxisArrow3D.set_size(10)
 
-	$MeshTrailBox.init(WorldSize)
+	var mtb :MeshTrailBox = preload("res://mesh_trail_box.tscn").instantiate()
+	add_child(mtb)
+	mtb.position = WorldSize /2
+	mtb.init(WorldSize,0)
 
 func _process(_delta: float) -> void:
 	label_demo()
-	var now := Time.get_unix_time_from_system()
-	var t := now /2.3
-	if $MovingCameraLightHober.is_current_camera():
-		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
-	elif $MovingCameraLightAround.is_current_camera():
-		$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
