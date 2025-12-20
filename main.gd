@@ -42,10 +42,9 @@ Currently rendering: occlusion culling:%s
 		]
 	if $"오른쪽패널/LabelInfo".visible:
 		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
-	$"왼쪽패널/Label".text = "MeshTrail %d" % [$MeshTrailContainer.get_child_count()]
+	#$"왼쪽패널/Label".text = "MeshTrail %d" % [$MeshTrailContainer.get_child_count()]
 
 
-var meshtrail_scene = preload("res://mesh_trail/mesh_trail.tscn")
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	ui_panel_init()
@@ -53,61 +52,18 @@ func _ready() -> void:
 
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
-	$BounceCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
 	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$AxisArrow3D.set_size(10)
-	$WallBox.mesh.size = WorldSize
 
-	var bound_size = WorldSize
-	bound_aabb = AABB( -bound_size/2, bound_size)
-	velocity = Vector3( (randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3)
+	$MeshTrailBox.init(WorldSize)
 
-	var mesh := BoxMesh.new()
-	mesh.size = Vector3(mesh_radius*2, mesh_radius*2, 0.1)
-	for i in 100:
-		var ball :MeshTrail = meshtrail_scene.instantiate(
-			#).set_ColorChange_OnBounce(
-			#).set_ColorChange_MeshGradient(
-			).set_ColorChange_ByPosition(bound_aabb
-			#).set_ColorChange_ByPositionFn(get_color_ByPosition
-			).init_with_alpha(mesh, 100,  1.0 , Vector3.ZERO,
-			).set_speed(20,40)
-		$MeshTrailContainer.add_child(ball)
-
-func bounce(_oldpos:Vector3, pos :Vector3, radiusa :float) -> Dictionary:
-	return Bounce.v3f(pos, bound_aabb, radiusa)
-func get_color_ByPosition(pos :Vector3) -> Color:
-	var co :Color
-	for i in 3:
-		co[i] = (pos[i] - bound_aabb.position[i]) / bound_aabb.size[i]
-	co = co.inverted()
-	return co
-
-var color_list_light = NamedColorList.make_light_color_list()
-var color_list_dark = NamedColorList.make_dark_color_list()
-func random_color1() -> Color:
-	return NamedColorList.color_list.pick_random()[0]
-func random_color2() -> Color:
-	return color_list_light.pick_random()[0]
-func random_color3() -> Color:
-	return color_list_dark.pick_random()[0]
-
-var bound_aabb :AABB
-var mesh_radius := 1.5
-var velocity :Vector3
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	label_demo()
-
-	for mt in $MeshTrailContainer.get_children():
-		mt.move_trail(delta,bounce, mesh_radius, 4*PI,)
-
 	var now := Time.get_unix_time_from_system()
 	var t := now /2.3
-	if $BounceCameraLight.is_current_camera():
-		velocity = $BounceCameraLight.bounce_within_aabb(delta, bound_aabb, velocity, Vector3.ZERO, mesh_radius )
-	elif $MovingCameraLightHober.is_current_camera():
+	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	elif $MovingCameraLightAround.is_current_camera():
 		$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
