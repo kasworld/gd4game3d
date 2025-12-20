@@ -64,32 +64,41 @@ func _ready() -> void:
 	var bound_size = WorldSize
 	b_box = AABB( -bound_size/2, bound_size)
 	velocity = Vector3( (randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3,(randf()-0.5)*WorldSize.length()/3)
-	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate(
-			).set_ColorChange_OnBounce(
-			).set_get_random_color_fn(random_color3
-			).init( bounce, radius, randi_range(1,10), mt, Vector3.ZERO
-			).set_speed(20,40)
-		$MeshTrailContainer.add_child(ball)
-	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate(
-			).set_ColorChange_MeshGradient(
-			).set_get_random_color_fn(random_color3
-			).init( bounce, radius, randi_range(10,100), mt, Vector3.ZERO
-			).set_speed(20,40)
-		$MeshTrailContainer.add_child(ball)
-	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate(
+	#for mt in MeshTrailTypeList:
+		#var ball = meshtrail_scene.instantiate(
+			#).set_ColorChange_OnBounce(
+			#).set_get_random_color_fn(random_color1
+			#).init( bounce, radius, randi_range(1,100), mt, Vector3.ZERO
+			#).set_speed(20,40)
+		#$MeshTrailContainer.add_child(ball)
+	#for mt in MeshTrailTypeList:
+		#var ball = meshtrail_scene.instantiate(
+			#).set_ColorChange_MeshGradient(
+			#).set_get_random_color_fn(random_color1
+			#).init( bounce, radius, randi_range(10,100), mt, Vector3.ZERO
+			#).set_speed(20,40)
+		#$MeshTrailContainer.add_child(ball)
+	#for mt in MeshTrailTypeList:
+		#var ball = meshtrail_scene.instantiate(
+			#).set_ColorChange_ByPosition(b_box
+			#).init( bounce, radius, randi_range(100,1000), mt, Vector3.ZERO
+			#).set_speed(20,40)
+		#$MeshTrailContainer.add_child(ball)
+	#for mt in MeshTrailTypeList:
+		#var ball = meshtrail_scene.instantiate(
+			#).set_ColorChange_ByPositionFn(get_color_ByPosition
+			#).init( bounce, radius, randi_range(10,1000), mt, Vector3.ZERO
+			#).set_speed(20,40)
+		#$MeshTrailContainer.add_child(ball)
+
+	var mesh := MeshTrail.NewMeshByType("I",radius)
+	for i in 100:
+		var ball :MeshTrail = meshtrail_scene.instantiate(
 			).set_ColorChange_ByPosition(b_box
-			).init( bounce, radius, randi_range(1,10), mt, Vector3.ZERO
+			).init_trail_with_alpha(mesh, randi_range(100,1000), bounce, radius, 4*PI, 1.0 , Vector3.ZERO,
 			).set_speed(20,40)
 		$MeshTrailContainer.add_child(ball)
-	for mt in MeshTrailTypeList:
-		var ball = meshtrail_scene.instantiate(
-			).set_ColorChange_ByPositionFn(get_color_ByPosition
-			).init( bounce, radius, randi_range(1,10), mt, Vector3.ZERO
-			).set_speed(20,40)
-		$MeshTrailContainer.add_child(ball)
+
 
 func bounce(_oldpos:Vector3, pos :Vector3, radiusa :float) -> Dictionary:
 	return Bounce.v3f(pos, b_box, radiusa)
@@ -100,7 +109,7 @@ func get_color_ByPosition(pos :Vector3) -> Color:
 	co = co.inverted()
 	return co
 
-var MeshTrailTypeList = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
+var MeshTrailTypeList = PlayingCard.make_deck()  #  ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"]
 
 var color_list_light = NamedColorList.make_light_color_list()
 var color_list_dark = NamedColorList.make_dark_color_list()

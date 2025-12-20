@@ -93,7 +93,15 @@ var current_rotation :float
 var current_rotation_velocity :float
 var rotation_velocity_deviation :float
 
-func init(bounce_fn_a :Callable, radius_a :float, inst_count :int, mesh_type, initial_pos :Vector3, rotation_velocity_deviation_a :float = 4*PI) -> MeshTrail:
+func init_trail_with_alpha(
+		mesh :Mesh,
+		inst_count :int,
+		bounce_fn_a :Callable,
+		radius_a :float,
+		rotation_velocity_deviation_a :float = 4*PI,
+		alpha :float = 1.0,
+		initial_pos :Vector3 = Vector3.ZERO,
+		) -> MeshTrail:
 	radius = radius_a
 	bounce_fn = bounce_fn_a
 	rotation_velocity_deviation = rotation_velocity_deviation_a
@@ -102,7 +110,7 @@ func init(bounce_fn_a :Callable, radius_a :float, inst_count :int, mesh_type, in
 	head_velocity = Vector3( (randf()-0.5)*speed_max, (randf()-0.5)*speed_max, (randf()-0.5)*speed_max)
 	color_from = get_random_color_fn.call()
 	color_to = get_random_color_fn.call()
-	init_with_alpha(NewMeshByType(mesh_type,radius), inst_count, 1.0, initial_pos)
+	init_with_alpha(mesh, inst_count, alpha, initial_pos)
 	return self
 
 func set_speed(mins :float, maxs :float) -> MeshTrail:
