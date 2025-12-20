@@ -69,3 +69,7 @@ theme = SubResource("Theme_1bvp3")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7mycd")
+
+[node name="MovingCameraLightHober" parent="." instance=ExtResource("3_1bvp3")]
+
+[node name="MovingCameraLightAround" parent="." instance=ExtResource("3_1bvp3")]

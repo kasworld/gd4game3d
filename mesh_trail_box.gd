@@ -8,15 +8,13 @@ func init(box_size :Vector3, colortype :int) -> MeshTrailBox:
 
 	var center := bound_aabb.get_center()
 	$BounceCameraLight.set_center_pos_far(center, center + Vector3(0, 0, box_size.z*2), box_size.length()*2)
-	$MovingCameraLightHober.set_center_pos_far( center, center + Vector3(0, 0, box_size.z), box_size.length()*2)
-	$MovingCameraLightAround.set_center_pos_far( center, center + Vector3(0, 0, box_size.z), box_size.length()*2)
 	$WallBox.mesh.size = box_size
 	velocity = Vector3( (randf()-0.5)*box_size.length()/3,(randf()-0.5)*box_size.length()/3,(randf()-0.5)*box_size.length()/3)
 
 	var mesh := BoxMesh.new()
 	mesh.size = Vector3(mesh_radius*4, mesh_radius/10, mesh_radius/10)
 	var inst_count := 1000
-	for i in 100:
+	for i in 10:
 		var mt :MeshTrail = meshtrail_scene.instantiate(
 			).init_with_alpha(mesh, inst_count,  1.0 , bound_aabb.get_center(),
 			).set_speed(20,40)
@@ -57,13 +55,6 @@ func _process(delta: float) -> void:
 	for mt in $MeshTrailContainer.get_children():
 		mt.move_trail(delta, bounce, mesh_radius, 4*PI,)
 
-	var now := Time.get_unix_time_from_system()
-	var t := now /2.3
-
 	var center := position + bound_aabb.get_center()
 	if $BounceCameraLight.is_current_camera():
 		velocity = $BounceCameraLight.bounce_within_aabb(delta, bound_aabb, velocity, center, mesh_radius )
-	elif $MovingCameraLightHober.is_current_camera():
-		$MovingCameraLightHober.move_hober_around_z(t, center, bound_aabb.size.length()/2, bound_aabb.size.length()*0.6 )
-	elif $MovingCameraLightAround.is_current_camera():
-		$MovingCameraLightAround.move_wave_around_y(t, center, bound_aabb.size.length()/2, bound_aabb.size.length()*0.6 )

@@ -50,18 +50,43 @@ func _ready() -> void:
 	ui_panel_init()
 	timed_message_init()
 
+	var center := Vector3.ZERO
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
+	$MovingCameraLightHober.set_center_pos_far( center, center + Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
+	$MovingCameraLightAround.set_center_pos_far( center, center + Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$AxisArrow3D.set_size(10)
 
 	var mtb :MeshTrailBox = preload("res://mesh_trail_box.tscn").instantiate()
 	add_child(mtb)
-	mtb.position = WorldSize /2
+	mtb.position = Vector3(WorldSize.x, WorldSize.y,0) /2 + Vector3(1,1,0)
 	mtb.init(WorldSize,0)
+
+	mtb = preload("res://mesh_trail_box.tscn").instantiate()
+	add_child(mtb)
+	mtb.position = Vector3(-WorldSize.x, WorldSize.y,0)/2 + Vector3(-1,1,0)
+	mtb.init(WorldSize,1)
+
+	mtb = preload("res://mesh_trail_box.tscn").instantiate()
+	add_child(mtb)
+	mtb.position = Vector3(WorldSize.x, -WorldSize.y,0)/2 + Vector3(1,-1,0)
+	mtb.init(WorldSize,2)
+
+	mtb = preload("res://mesh_trail_box.tscn").instantiate()
+	add_child(mtb)
+	mtb.position = Vector3(-WorldSize.x, -WorldSize.y,0)/2 + Vector3(-1,-1,0)
+	mtb.init(WorldSize,3)
 
 func _process(_delta: float) -> void:
 	label_demo()
+	var center := Vector3.ZERO
+	var now := Time.get_unix_time_from_system()
+	var t := now /2.3
+	if $MovingCameraLightHober.is_current_camera():
+		$MovingCameraLightHober.move_hober_around_z(t, center, WorldSize.length(), WorldSize.length() )
+	elif $MovingCameraLightAround.is_current_camera():
+		$MovingCameraLightAround.move_wave_around_y(t, center, WorldSize.length(), WorldSize.length() )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
