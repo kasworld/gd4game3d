@@ -40,7 +40,8 @@ func copy_position_rotation(n :Node3D) -> void:
 	rotation = n.rotation
 
 func _to_string() -> String:
-	return "MovingCameraLight%d[fov camera:%s, fov light:%s, rotation:%s]" % [id, fov_camera,fov_light, rotation_degrees ]
+	return "MovingCameraLight%d[fov camera:%s, fov light:%s, rotation:%s, position:%s]" % [
+		id, fov_camera,fov_light, rotation_degrees, position ]
 
 func fov_camera_inc() -> void:
 	$Camera3D.fov = fov_camera.set_up()
@@ -89,7 +90,8 @@ func bounce_within_aabb(delta :float, bounce_area :AABB, velocity :Vector3, cent
 
 func set_center_pos_far(center :Vector3, pos :Vector3, far :float) -> void:
 	position = pos
-	look_at(center)
+	#look_at(center)
+	look_at_from_position(position, center)
 	$Camera3D.far = far
 	$SpotLight3D.spot_range = far
 

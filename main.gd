@@ -56,7 +56,7 @@ func _ready() -> void:
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
 	$MovingCameraLightHober.set_center_pos_far( center, center + Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$MovingCameraLightAround.set_center_pos_far( center, center + Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
-	$AxisArrow3D.set_size(10)
+	$AxisArrow3D.set_size(10).set_colors()
 
 	var mtb :MeshTrailBox = preload("res://mesh_trail_box.tscn").instantiate()
 	add_child(mtb)
