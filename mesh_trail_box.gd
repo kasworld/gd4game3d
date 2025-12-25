@@ -16,7 +16,7 @@ func init(box_size :Vector3, colortype :int) -> MeshTrailBox:
 	var inst_count := 1000
 	for i in 10:
 		var mt :MeshTrail = meshtrail_scene.instantiate(
-			).init_with_alpha(mesh, inst_count,  1.0 , bound_aabb.get_center(),
+			).init_with_alpha(mesh, inst_count,  1.0 ,true, bound_aabb.get_center(),
 			).set_speed(20,40)
 		match colortype:
 			0:
