@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="gd4game3d"
+config/name="gd4meshtrail"
 config/version="1.0.0"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")

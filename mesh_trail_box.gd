@@ -12,11 +12,12 @@ func init(box_size :Vector3, colortype :int) -> MeshTrailBox:
 	velocity = Vector3( (randf()-0.5)*box_size.length()/3,(randf()-0.5)*box_size.length()/3,(randf()-0.5)*box_size.length()/3)
 
 	var mesh := BoxMesh.new()
+	mesh.material = MultiMeshShape.make_color_material(1.0)
 	mesh.size = Vector3(mesh_radius*4, mesh_radius/10, mesh_radius/10)
 	var inst_count := 1000
 	for i in 10:
 		var mt :MeshTrail = meshtrail_scene.instantiate(
-			).init_with_alpha(mesh, inst_count,  1.0 ,true, bound_aabb.get_center(),
+			).init_with_color_mesh(mesh, inst_count, true, bound_aabb.get_center(),
 			).set_speed(20,40)
 		match colortype:
 			0:
